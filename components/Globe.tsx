@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -180,6 +180,27 @@ function SpinningGlobe() {
 }
 
 export default function Globe() {
+  // three.js's OrbitControls imperatively sets `domElement.style.touchAction
+  // = "none"` the moment it connects, to read raw drag gestures for
+  // rotation — it does this unconditionally, so a Canvas `style` prop can't
+  // override it, and it doesn't check enableRotate/Pan/Zoom first. On a
+  // phone the globe covers nearly the full hero width, so that silently
+  // swallowed every swipe there and trapped mobile visitors who couldn't
+  // scroll past it. The globe already auto-rotates on its own (see
+  // SpinningGlobe's useFrame below), so drag-to-look is a nice-to-have for
+  // a mouse, not something touch users were relying on — only mount
+  // OrbitControls for fine-pointer (mouse/trackpad) devices, so touch
+  // devices never trigger the lock and native scroll always works there.
+  const [allowDrag, setAllowDrag] = useState(false);
+
+  useEffect(() => {
+    try {
+      setAllowDrag(window.matchMedia("(pointer: fine)").matches);
+    } catch {
+      setAllowDrag(false);
+    }
+  }, []);
+
   return (
     <Canvas
       camera={{ position: [0, 0, 4.4], fov: 42 }}
@@ -190,14 +211,16 @@ export default function Globe() {
       <directionalLight position={[3, 2, 3]} intensity={1.6} color="#E8A23D" />
       <directionalLight position={[-3, -1, -2]} intensity={0.35} color="#2E6E5B" />
       <SpinningGlobe />
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate={false}
-        rotateSpeed={0.35}
-        minPolarAngle={Math.PI / 2 - 0.6}
-        maxPolarAngle={Math.PI / 2 + 0.6}
-      />
+      {allowDrag && (
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          autoRotate={false}
+          rotateSpeed={0.35}
+          minPolarAngle={Math.PI / 2 - 0.6}
+          maxPolarAngle={Math.PI / 2 + 0.6}
+        />
+      )}
     </Canvas>
   );
 }
