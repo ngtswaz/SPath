@@ -3,18 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
-import gsap from "gsap";
 
 const TransitionGlobe = dynamic(() => import("./TransitionGlobe"), { ssr: false });
 
 /**
- * On every route change, the globe itself becomes the connective tissue:
- * a brief night-wash overlay with the globe spinning through, then it
- * fades to reveal wherever you just navigated to. Replaces the old flat
- * winding-line wipe — same ~0.9s budget, so this isn't a slower page swap,
- * just a more thematic one. The globe only mounts while actually
- * transitioning (not kept alive in the background) so it costs nothing on
- * pages that never trigger one.
+ * On every route change, the globe itself is the connective tissue: the
+ * same globe as the hero swings across the screen (camera orbiting around
+ * it, left or right) on a fully transparent background — no solid overlay,
+ * no "curtain" blocking the page. The destination content is already there
+ * underneath the whole time; the globe is just what visibly moves. Mounts
+ * only for the duration of the swing (not kept alive in the background), so
+ * it costs nothing on pages that never trigger a transition.
  */
 export default function PathTransition({
   children,
@@ -28,20 +27,10 @@ export default function PathTransition({
   // without re-arming itself and firing the transition on first load.
   const prevPathname = useRef(pathname);
   const [active, setActive] = useState(false);
-  // Holds whichever "start the fade-in now" closure the current transition
-  // created, so TransitionGlobe's onReady (fired from a child that doesn't
-  // exist yet when the effect below runs) always reaches the right one.
-  const startRef = useRef<() => void>(() => {});
+  const reverseRef = useRef(false);
 
-  // Warm the globe's chunk on mount, well before any click could need it.
-  // Without this, the FIRST transition a visitor ever triggers mounts
-  // TransitionGlobe cold: the overlay reaches full opacity (~0.28s) before
-  // the lazy-loaded chunk finishes fetching and the <canvas> paints, so the
-  // very first transition shows a blank dark box with nothing in it until
-  // the chunk catches up. Prefetching here (import, not the dynamic()
-  // wrapper) shares the same module cache, so by the time a route actually
-  // changes the chunk is already resolved and only the mount itself (React
-  // + WebGL context creation) remains — which is what onReady below gates.
+  // Warm the globe's chunk on mount, well before any click could need it,
+  // so the first-ever transition in a session doesn't lag behind the rest.
   useEffect(() => {
     import("./TransitionGlobe");
   }, []);
@@ -55,59 +44,44 @@ export default function PathTransition({
     const overlay = overlayRef.current;
     if (!overlay) return;
 
+    // Alternate the swing direction per-transition so it doesn't feel like
+    // the same mechanical animation firing every single time.
+    reverseRef.current = Math.random() < 0.5;
     setActive(true);
     overlay.style.pointerEvents = "auto";
 
-    let started = false;
-    let tl: gsap.core.Timeline | null = null;
+    // Independent backstop: SwingCamera calls onDone itself once its own
+    // wall-clock timer completes, but that depends on R3F's render loop
+    // actually ticking. Testing surfaced a run where a busy main thread
+    // during the route change starved rAF badly enough that the swing never
+    // reached completion within several seconds — a real, if rare, failure
+    // mode that would otherwise leave the globe (and its pointer-events
+    // lock) stuck on screen indefinitely. This timer isn't tied to the
+    // render loop at all, so it always fires and cleans up regardless.
+    const backstop = setTimeout(() => {
+      overlay.style.pointerEvents = "none";
+      setActive(false);
+    }, 1400);
 
-    // Gated on TransitionGlobe's actual onReady signal rather than a fixed
-    // delay. A first attempt used a flat 0.08s delay tuned from measured
-    // mount times on this machine (~65-85ms) — screenshotting the real,
-    // unobserved transition (not through a polling loop, which itself
-    // competes for the main thread and quietly skews the timing) showed
-    // that guess still left a genuine ~100ms window of solid overlay with
-    // no globe in it. Waiting on the real signal removes the guesswork, and
-    // adapts to whatever a given device actually needs.
-    const start = () => {
-      if (started) return;
-      started = true;
-      tl = gsap.timeline({
-        onComplete: () => {
-          overlay.style.pointerEvents = "none";
-          setActive(false);
-        },
-      });
-      tl.fromTo(
-        overlay,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.28, ease: "power2.out" }
-      )
-        .to(overlay, { opacity: 1, duration: 0.3 }) // hold — the route swap happens somewhere in here
-        .to(overlay, { opacity: 0, duration: 0.35, ease: "power1.inOut" });
-    };
-
-    startRef.current = start;
-    // Defensive cap: never leave the overlay stuck invisible if onReady
-    // somehow never fires (WebGL unsupported, a dropped frame callback).
-    const fallback = setTimeout(start, 450);
-
-    return () => {
-      clearTimeout(fallback);
-      tl?.kill();
-    };
+    return () => clearTimeout(backstop);
   }, [pathname]);
+
+  function handleSwingDone() {
+    const overlay = overlayRef.current;
+    if (overlay) overlay.style.pointerEvents = "none";
+    setActive(false);
+  }
 
   return (
     <>
       <div
         ref={overlayRef}
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-[70] flex items-center justify-center bg-night opacity-0"
+        className="pointer-events-none fixed inset-0 z-[70] flex items-center justify-center"
       >
         {active && (
           <div className="h-[42vmin] w-[42vmin] max-h-[300px] max-w-[300px]">
-            <TransitionGlobe onReady={() => startRef.current()} />
+            <TransitionGlobe reverse={reverseRef.current} onDone={handleSwingDone} />
           </div>
         )}
       </div>

@@ -144,7 +144,11 @@ function Graticule() {
   );
 }
 
-function SpinningGlobe() {
+// Exported so TransitionGlobe can reuse the exact same body (sphere,
+// graticule, rim glow, markers, idle spin) instead of a separate lookalike
+// copy — the two had quietly drifted apart (radius, line opacity), which
+// read as "not really the same globe" during page transitions.
+export function SpinningGlobe() {
   const group = useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {
