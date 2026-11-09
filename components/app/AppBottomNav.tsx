@@ -61,7 +61,7 @@ export default function AppBottomNav() {
   return (
     <nav
       aria-label="App"
-      className="sticky bottom-0 z-30 flex h-[66px] shrink-0 border-t border-sandstone bg-bone"
+      className="sticky bottom-0 z-30 flex h-[66px] shrink-0 border-t border-sandstone bg-bone md:hidden"
     >
       {TABS.map((tab) => {
         const active = pathname === tab.href || pathname?.startsWith(tab.href + "/");
