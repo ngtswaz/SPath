@@ -1,8 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import { SPOKES } from "@/lib/constants";
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/app")) return null;
+
   return (
     <footer className="relative mt-24 border-t border-ink/10 bg-cream">
       <svg

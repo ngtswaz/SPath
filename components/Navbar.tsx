@@ -2,30 +2,57 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import { SPOKES } from "@/lib/constants";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  // The product app (/app/*) has its own shell and bottom nav — no marketing header there.
+  if (pathname?.startsWith("/app")) return null;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-ink/5 bg-bone/75 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-50 bg-bone/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <Link href="/" className="text-ink" aria-label="Sidepath home">
+        <Link href="/" className="group flex items-center gap-3 text-ink" aria-label="Sidepath home">
           <Logo />
+          <span className="hidden font-serif text-xs italic text-terracotta/0 transition-colors duration-200 group-hover:text-terracotta/70 sm:inline">
+            Why not?
+          </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
-          {SPOKES.map((s) => (
-            <Link
-              key={s.key}
-              href={s.href}
-              className="font-mono text-xs uppercase tracking-wide text-ink/80 transition-colors hover:text-terracotta-dark"
-            >
-              {s.label}
-            </Link>
-          ))}
+        <nav aria-label="Primary" className="hidden items-center gap-9 md:flex">
+          {SPOKES.map((s) => {
+            const active = pathname === s.href;
+            return (
+              <Link
+                key={s.key}
+                href={s.href}
+                className="group relative py-1 font-sans text-[13.5px] font-medium lowercase tracking-tight text-ink/75 transition-colors hover:text-ink"
+              >
+                {s.label.toLowerCase()}
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 40 6"
+                  preserveAspectRatio="none"
+                  className={`absolute -bottom-1.5 left-0 h-1.5 w-full transition-opacity duration-200 ${
+                    active ? "opacity-100" : "opacity-0 group-hover:opacity-70"
+                  }`}
+                >
+                  <path
+                    d="M0 3 Q 10 0, 20 3 T 40 3"
+                    fill="none"
+                    stroke="#C0532E"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Mobile trigger */}
@@ -43,6 +70,16 @@ export default function Navbar() {
           </svg>
         </button>
       </div>
+
+      {/* Dashed trail instead of a flat rule — the brand's winding-path motif, flattened to a seam */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 400 2"
+        preserveAspectRatio="none"
+        className="block h-px w-full"
+      >
+        <line x1="0" y1="1" x2="400" y2="1" stroke="#C0532E" strokeWidth="1.2" strokeDasharray="1 5" opacity="0.5" />
+      </svg>
 
       {/* Mobile drawer */}
       {open && (
@@ -67,16 +104,21 @@ export default function Navbar() {
                 </svg>
               </button>
             </div>
-            {SPOKES.map((s) => (
-              <Link
-                key={s.key}
-                href={s.href}
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-4 font-serif text-2xl text-ink hover:bg-ink/5"
-              >
-                {s.label}
-              </Link>
-            ))}
+            {SPOKES.map((s) => {
+              const active = pathname === s.href;
+              return (
+                <Link
+                  key={s.key}
+                  href={s.href}
+                  onClick={() => setOpen(false)}
+                  className={`rounded-lg px-3 py-4 font-serif text-2xl lowercase hover:bg-ink/5 ${
+                    active ? "italic text-terracotta-dark" : "text-ink"
+                  }`}
+                >
+                  {s.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

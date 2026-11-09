@@ -79,27 +79,63 @@ function Markers() {
   );
 }
 
-function ContourLines() {
-  const rings = useMemo(() => {
-    const out: { radius: number; rotX: number; rotY: number }[] = [];
-    for (let i = 0; i < 6; i++) {
-      out.push({
-        radius: RADIUS * (0.3 + (i / 6) * 0.68),
-        rotX: (i * 37 * Math.PI) / 180,
-        rotY: (i * 61 * Math.PI) / 180,
-      });
+/**
+ * A real lat/lon graticule (meridians + parallels), not randomly-rotated
+ * rings — the random rings read as scattered flat portals instead of a
+ * sphere. A proper grid is what makes a stylized globe actually look like
+ * a globe at a glance, even with zero landmass texture.
+ */
+function Graticule() {
+  const lineR = RADIUS * 1.003;
+
+  const meridians = useMemo(() => {
+    const count = 7;
+    const lines: THREE.Vector3[][] = [];
+    for (let i = 0; i < count; i++) {
+      const lon = (i / count) * Math.PI * 2;
+      const pts: THREE.Vector3[] = [];
+      for (let j = 0; j <= 48; j++) {
+        const lat = -Math.PI / 2 + (j / 48) * Math.PI;
+        pts.push(pointOnSphere(lat, lon, lineR));
+      }
+      lines.push(pts);
     }
-    return out;
+    return lines;
   }, []);
+
+  const parallels = useMemo(() => {
+    const steps = 6;
+    const lines: THREE.Vector3[][] = [];
+    for (let i = 1; i < steps; i++) {
+      const lat = -Math.PI / 2 + (i / steps) * Math.PI;
+      const pts: THREE.Vector3[] = [];
+      for (let j = 0; j <= 64; j++) {
+        const lon = (j / 64) * Math.PI * 2;
+        pts.push(pointOnSphere(lat, lon, lineR));
+      }
+      lines.push(pts);
+    }
+    return lines;
+  }, []);
+
+  const allLines = useMemo(() => [...meridians, ...parallels], [meridians, parallels]);
 
   return (
     <group>
-      {rings.map((r, i) => (
-        <mesh key={i} rotation={[r.rotX, r.rotY, 0]}>
-          <torusGeometry args={[r.radius, 0.002, 8, 64]} />
-          <meshBasicMaterial color="#E0C9A6" transparent opacity={0.28} />
-        </mesh>
-      ))}
+      {allLines.map((pts, i) => {
+        const geometry = new THREE.BufferGeometry().setFromPoints(pts);
+        return (
+          <primitive
+            key={i}
+            object={
+              new THREE.Line(
+                geometry,
+                new THREE.LineBasicMaterial({ color: "#E8DCC4", transparent: true, opacity: 0.55 })
+              )
+            }
+          />
+        );
+      })}
     </group>
   );
 }
@@ -113,25 +149,27 @@ function SpinningGlobe() {
 
   return (
     <group ref={group}>
-      {/* Core sphere */}
+      {/* Core sphere — a touch warmer than near-black so the amber key light
+          actually reads on it, instead of the sphere looking flat and dead */}
       <mesh>
         <sphereGeometry args={[RADIUS, 64, 64]} />
-        <meshStandardMaterial color="#1c1611" roughness={0.85} metalness={0.05} />
+        <meshStandardMaterial color="#231b14" roughness={0.8} metalness={0.08} />
       </mesh>
 
-      {/* Tight additive rim glow — kept faint per the "not an ugly ring" lesson */}
-      <mesh scale={1.06}>
+      {/* Tight additive rim glow — kept faint per the "not an ugly ring" lesson.
+          Scale trimmed closer to 1 so it reads as a glow, not a drawn ring. */}
+      <mesh scale={1.025}>
         <sphereGeometry args={[RADIUS, 64, 64]} />
         <meshBasicMaterial
           color="#C0532E"
           transparent
-          opacity={0.16}
+          opacity={0.22}
           side={THREE.BackSide}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      <ContourLines />
+      <Graticule />
       <Markers />
     </group>
   );
@@ -144,9 +182,9 @@ export default function Globe() {
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true }}
     >
-      <ambientLight intensity={0.35} color="#F7F2EA" />
-      <directionalLight position={[3, 2, 3]} intensity={1.4} color="#E8A23D" />
-      <directionalLight position={[-3, -1, -2]} intensity={0.3} color="#2E6E5B" />
+      <ambientLight intensity={0.42} color="#F7F2EA" />
+      <directionalLight position={[3, 2, 3]} intensity={1.6} color="#E8A23D" />
+      <directionalLight position={[-3, -1, -2]} intensity={0.35} color="#2E6E5B" />
       <SpinningGlobe />
       <OrbitControls
         enableZoom={false}
