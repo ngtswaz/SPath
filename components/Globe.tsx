@@ -4,9 +4,13 @@ import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-import { SPOKES } from "@/lib/constants";
 
 const RADIUS = 1.6;
+
+// Four fixed points around the equator, purely decorative — this used to
+// mark the marketing site's four spoke pages; now it's just the globe's
+// own visual rhythm, with no routes behind it.
+const MARKER_ANGLES = [310, 40, 140, 220];
 
 function latLonFromAngle(angleDeg: number) {
   // Spread the four spokes around the equator band, with a little
@@ -26,9 +30,9 @@ function pointOnSphere(lat: number, lon: number, r = RADIUS) {
 function Markers() {
   const points = useMemo(
     () =>
-      SPOKES.map((s) => {
-        const { lat, lon } = latLonFromAngle(s.angle);
-        return { ...s, pos: pointOnSphere(lat, lon, RADIUS * 1.01) };
+      MARKER_ANGLES.map((angle) => {
+        const { lat, lon } = latLonFromAngle(angle);
+        return { key: angle, pos: pointOnSphere(lat, lon, RADIUS * 1.01) };
       }),
     []
   );

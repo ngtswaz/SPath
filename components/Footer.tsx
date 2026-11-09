@@ -1,16 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "./Logo";
-import { SPOKES } from "@/lib/constants";
+import StartButton from "./StartButton";
 
 export default function Footer() {
   const pathname = usePathname();
   if (pathname?.startsWith("/app")) return null;
 
   return (
-    <footer className="relative mt-24 border-t border-ink/10 bg-cream">
+    <footer className="relative border-t border-ink/10 bg-cream">
       <svg
         viewBox="0 0 400 24"
         preserveAspectRatio="none"
@@ -27,7 +26,7 @@ export default function Footer() {
         />
       </svg>
 
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-14 md:flex-row md:items-start md:justify-between">
+      <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-6 py-14 sm:flex-row sm:items-center sm:justify-between">
         <div className="max-w-xs">
           <Logo />
           <p className="mt-4 text-sm leading-relaxed text-ink/70">
@@ -36,20 +35,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <nav aria-label="Footer" className="flex gap-10">
-          <ul className="flex flex-col gap-3">
-            {SPOKES.map((s) => (
-              <li key={s.key}>
-                <Link
-                  href={s.href}
-                  className="font-mono text-xs uppercase tracking-wide text-ink/70 hover:text-terracotta-dark"
-                >
-                  {s.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <StartButton variant="secondary">Start exploring</StartButton>
       </div>
 
       <div className="mx-auto max-w-6xl px-6 pb-8 font-mono text-[11px] uppercase tracking-wide text-ink/70">

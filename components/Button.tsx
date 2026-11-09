@@ -45,7 +45,17 @@ export default function Button(props: Props) {
     );
   }
 
-  const { href: _href, ...buttonProps } = props as ButtonAsButton;
+  // Strip the props Button already consumed above (variant, className,
+  // children) before spreading the rest — otherwise an explicitly-passed
+  // className (even "") rides along in the spread and overwrites the
+  // merged `classes` string, silently dropping base + variant styles.
+  const {
+    href: _href,
+    variant: _variant,
+    className: _className,
+    children: _children,
+    ...buttonProps
+  } = props as ButtonAsButton;
   return (
     <button className={classes} {...buttonProps}>
       {children}
