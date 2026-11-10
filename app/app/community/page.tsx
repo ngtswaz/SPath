@@ -39,7 +39,7 @@ export default function CommunityPage() {
               <p className="text-[13px] leading-snug text-ink/90">{post.caption}</p>
               <div className="mt-3 flex items-center justify-between">
                 <span className="font-mono text-[10.5px] text-ink/72">
-                  ${post.price} · {post.days} days
+                  ${post.price}, {post.days} days
                 </span>
                 <button
                   type="button"
@@ -57,7 +57,7 @@ export default function CommunityPage() {
         ))}
 
         <p className="mt-2 text-center text-[13px] text-ink/60">
-          Posting your own trip isn&rsquo;t built yet &mdash; this is a preview of what the
+          Posting your own trip isn&rsquo;t built yet. This is a preview of what the
           feed will look like once it is.
         </p>
       </div>

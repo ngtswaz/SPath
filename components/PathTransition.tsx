@@ -2,18 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
 
-const TransitionGlobe = dynamic(() => import("./TransitionGlobe"), { ssr: false });
+// Matches globals.css's `.path-line.drawn` animation duration (path-draw,
+// 1.1s) so the fade never cuts the line off mid-draw.
+const DRAW_MS = 1100;
+const FADE_MS = 300;
 
 /**
- * On every route change, the globe itself is the connective tissue: the
- * same globe as the hero swings across the screen (camera orbiting around
- * it, left or right) on a fully transparent background — no solid overlay,
- * no "curtain" blocking the page. The destination content is already there
- * underneath the whole time; the globe is just what visibly moves. Mounts
- * only for the duration of the swing (not kept alive in the background), so
- * it costs nothing on pages that never trigger a transition.
+ * The globe's replacement as connective tissue between routes: the brand's
+ * winding-path line draws itself across a warm photo-toned panel, then the
+ * whole panel fades to reveal the page underneath — the same motif used in
+ * the hero and on Explore's route map, now also carrying the transition.
+ * No 3D canvas, so no OrbitControls touch-scroll trap and nothing to keep
+ * alive between route changes.
  */
 export default function PathTransition({
   children,
@@ -21,67 +22,59 @@ export default function PathTransition({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const overlayRef = useRef<HTMLDivElement>(null);
   // Set once, at mount, from the first render's pathname — not inside the
   // effect — so it survives Strict Mode's dev-only double effect-invocation
   // without re-arming itself and firing the transition on first load.
   const prevPathname = useRef(pathname);
-  const [active, setActive] = useState(false);
-  const reverseRef = useRef(false);
-
-  // Warm the globe's chunk on mount, well before any click could need it,
-  // so the first-ever transition in a session doesn't lag behind the rest.
-  useEffect(() => {
-    import("./TransitionGlobe");
-  }, []);
+  const [phase, setPhase] = useState<"idle" | "drawing" | "fading">("idle");
+  const [runId, setRunId] = useState(0);
 
   useEffect(() => {
-    if (prevPathname.current === pathname) {
-      return;
-    }
+    if (prevPathname.current === pathname) return;
     prevPathname.current = pathname;
 
-    const overlay = overlayRef.current;
-    if (!overlay) return;
+    setRunId((n) => n + 1);
+    setPhase("drawing");
 
-    // Alternate the swing direction per-transition so it doesn't feel like
-    // the same mechanical animation firing every single time.
-    reverseRef.current = Math.random() < 0.5;
-    setActive(true);
-    overlay.style.pointerEvents = "auto";
-
-    // Independent backstop: SwingCamera calls onDone itself once its own
-    // wall-clock timer completes, but that depends on R3F's render loop
-    // actually ticking. Testing surfaced a run where a busy main thread
-    // during the route change starved rAF badly enough that the swing never
-    // reached completion within several seconds — a real, if rare, failure
-    // mode that would otherwise leave the globe (and its pointer-events
-    // lock) stuck on screen indefinitely. This timer isn't tied to the
-    // render loop at all, so it always fires and cleans up regardless.
-    const backstop = setTimeout(() => {
-      overlay.style.pointerEvents = "none";
-      setActive(false);
-    }, 1400);
-
-    return () => clearTimeout(backstop);
+    const toFade = setTimeout(() => setPhase("fading"), DRAW_MS);
+    const toIdle = setTimeout(() => setPhase("idle"), DRAW_MS + FADE_MS);
+    return () => {
+      clearTimeout(toFade);
+      clearTimeout(toIdle);
+    };
   }, [pathname]);
 
-  function handleSwingDone() {
-    const overlay = overlayRef.current;
-    if (overlay) overlay.style.pointerEvents = "none";
-    setActive(false);
-  }
+  const active = phase !== "idle";
 
   return (
     <>
       <div
-        ref={overlayRef}
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-[70] flex items-center justify-center"
+        className={`fixed inset-0 z-[70] overflow-hidden transition-opacity duration-300 ${
+          active ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
       >
         {active && (
-          <div className="h-[42vmin] w-[42vmin] max-h-[300px] max-w-[300px]">
-            <TransitionGlobe reverse={reverseRef.current} onDone={handleSwingDone} />
+          <div
+            key={runId}
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 120% 70% at 30% 110%, rgba(38,32,27,.55), transparent 60%), linear-gradient(180deg, #E8C79A 0%, #DCA876 35%, #B96B3E 68%, #7A4226 100%)",
+            }}
+          >
+            <svg viewBox="0 0 400 300" preserveAspectRatio="none" className="h-full w-full">
+              <path
+                d="M 10 250 Q 110 185, 175 155 T 390 55"
+                fill="none"
+                stroke="#C0532E"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                pathLength={1}
+                strokeDasharray={1}
+                className="animate-path-trace"
+              />
+            </svg>
           </div>
         )}
       </div>

@@ -57,7 +57,7 @@ export default function OnboardingPage() {
           <em className="text-terracotta italic">{label}</em>
         </h1>
         <p className="mt-3 text-[13px] leading-relaxed text-ink/78">
-          Your answers show a pattern most consistent with this &mdash; not a box, just where
+          Your answers show a pattern most consistent with this, not a box, just where
           today&rsquo;s answers lean. Retake it any time; it changes as you do.
         </p>
 

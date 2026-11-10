@@ -38,8 +38,8 @@ export default function Footer() {
         <StartButton variant="secondary">Start exploring</StartButton>
       </div>
 
-      <div className="mx-auto max-w-6xl px-6 pb-8 font-mono text-[11px] uppercase tracking-wide text-ink/70">
-        Why not? · sidepath.travel
+      <div className="mx-auto max-w-6xl px-6 pb-8 font-mono text-[11px] text-ink/60">
+        sidepath.travel
       </div>
     </footer>
   );

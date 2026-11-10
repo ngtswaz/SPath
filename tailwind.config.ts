@@ -36,6 +36,15 @@ const config: Config = {
           "0%": { strokeDashoffset: "1000" },
           "100%": { strokeDashoffset: "0" },
         },
+        // Geometry-independent trace: paired with the SVG `pathLength={1}`
+        // attribute so a dash of exactly 1 unit always covers the whole
+        // line, whatever its actual rendered length is. Avoids guessing a
+        // dasharray number per path (the bug that left path-draw partially
+        // invisible when reused on a differently-sized path).
+        "path-trace": {
+          "0%": { strokeDashoffset: "1" },
+          "100%": { strokeDashoffset: "0" },
+        },
         "fade-up": {
           "0%": { opacity: "0", transform: "translateY(12px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
@@ -43,6 +52,7 @@ const config: Config = {
       },
       animation: {
         "path-draw": "path-draw 1.1s ease-out forwards",
+        "path-trace": "path-trace 1.1s ease-out forwards",
         "fade-up": "fade-up 0.6s ease-out forwards",
       },
     },

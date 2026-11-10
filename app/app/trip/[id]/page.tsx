@@ -17,7 +17,7 @@ export default function TripPage({ params }: { params: { id: string } }) {
         <p className="font-serif text-xl italic text-ink/80">No itinerary here yet.</p>
         <p className="text-sm text-ink/65">
           This destination doesn&rsquo;t have a planned trip in this preview. The itinerary
-          builder (trip form, planner, perk offers) isn&rsquo;t built yet &mdash; see the
+          builder (trip form, planner, perk offers) isn&rsquo;t built yet. See the
           product spec for the full build order.
         </p>
         <button
@@ -65,8 +65,10 @@ export default function TripPage({ params }: { params: { id: string } }) {
           </button>
         </div>
         <h1 className="font-serif text-[27px] font-semibold tracking-tightish">{destination.name}</h1>
-        <div className="mt-1 font-mono text-[11.5px] text-ink/72">
-          {trip.days.length}+ days · {trip.dateRange} · ${trip.budget} all in
+        <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 font-mono text-[11.5px] text-ink/72">
+          <span>{trip.days.length}+ days</span>
+          <span>{trip.dateRange}</span>
+          <span>${trip.budget} all in</span>
         </div>
       </div>
 
@@ -104,8 +106,8 @@ export default function TripPage({ params }: { params: { id: string } }) {
         ))}
 
         <p className="pb-2 pt-1 text-center font-mono text-[11px] text-ink/72">
-          Full planner (live prices, perk offers, alternatives per slot) isn&rsquo;t built yet
-          &mdash; this is a seeded itinerary for preview.
+          Full planner (live prices, perk offers, alternatives per slot) isn&rsquo;t built yet.
+          This is a seeded itinerary for preview.
         </p>
       </div>
     </div>

@@ -98,9 +98,7 @@ export default function AppSidebarNav() {
       </div>
 
       <div className="border-t border-dashed border-sandstone pt-5">
-        <p className="font-mono text-[10.5px] uppercase tracking-wide text-ink/50">
-          Why not? · sidepath
-        </p>
+        <p className="font-serif text-[13px] italic text-ink/50">Why not?</p>
       </div>
     </nav>
   );
