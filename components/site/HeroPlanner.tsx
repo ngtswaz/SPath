@@ -21,9 +21,9 @@ export default function HeroPlanner() {
         e.preventDefault();
         router.push(`/app/plan?to=${to}&days=${encodeURIComponent(days)}`);
       }}
-      className="grid gap-2 rounded-2xl bg-white p-2 shadow-float sm:grid-cols-[1.4fr_1fr_auto]"
+      className="grid gap-2 rounded-3xl bg-white p-2 shadow-float sm:grid-cols-[1.4fr_1fr_auto]"
     >
-      <div className="rounded-xl px-3 pb-1.5 pt-2 focus-within:bg-ink/[0.04]">
+      <div className="rounded-2xl px-3 pb-1.5 pt-2 focus-within:bg-ink/[0.04]">
         <label htmlFor="hero-to" className="block text-xs font-semibold text-ink/70">
           Where to
         </label>
@@ -44,7 +44,7 @@ export default function HeroPlanner() {
           ))}
         </select>
       </div>
-      <div className="rounded-xl px-3 pb-1.5 pt-2 focus-within:bg-ink/[0.04] sm:border-l sm:border-ink/10">
+      <div className="rounded-2xl px-3 pb-1.5 pt-2 focus-within:bg-ink/[0.04] sm:border-l sm:border-ink/10">
         <label htmlFor="hero-days" className="block text-xs font-semibold text-ink/70">
           How many days
         </label>

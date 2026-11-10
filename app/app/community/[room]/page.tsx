@@ -68,7 +68,7 @@ export default function RoomPage({ params }: { params: { room: string } }) {
           <ul className="space-y-3">
             {messages.map((m) => (
               <li key={m.id} className="flex flex-col items-end">
-                <p className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-ink px-4 py-2.5 text-[15px] leading-relaxed text-bone">{m.text}</p>
+                <p className="max-w-[85%] whitespace-pre-wrap rounded-3xl rounded-br-md bg-ink px-4 py-2.5 text-[15px] leading-relaxed text-bone">{m.text}</p>
                 <p className="mt-1 text-xs text-ink/55">
                   You, {new Date(m.at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
                 </p>

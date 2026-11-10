@@ -26,14 +26,14 @@ export const PHOTOS = {
     alt: "A yellow tram on a steep street in Lisbon",
     by: "Jacek Urbanski",
     page: "https://unsplash.com/photos/a-yellow-tram-rides-down-a-street-in-lisbon-0sODcpe2RPo",
-    tone: ["#C0532E", "#E8A23D"],
+    tone: ["#8A7350", "#E0C9A6"],
   },
   tbilisi: {
     id: "1565008576549-57569a49371d",
     alt: "Tbilisi under an orange evening sky",
     by: "Neil Sengupta",
     page: "https://unsplash.com/photos/city-with-high-rise-buildings-under-orange-skies-emWzYc5XC_A",
-    tone: ["#7A2E33", "#E8A23D"],
+    tone: ["#3B2A21", "#B9A77C"],
   },
   oaxaca: {
     id: "1686448921254-b326a7914d2f",
@@ -47,7 +47,7 @@ export const PHOTOS = {
     alt: "Red rooftops in Lisbon with the water behind them",
     by: "Martti Salmi",
     page: "https://unsplash.com/photos/a-group-of-buildings-with-red-roofs-and-a-body-of-water-in-the-background-BxIeXOt0chg",
-    tone: ["#9E411F", "#E0C9A6"],
+    tone: ["#7A6A58", "#E0C9A6"],
   },
   jeronimos: {
     id: "1747786892177-e0a4c99cdfae",
@@ -61,7 +61,7 @@ export const PHOTOS = {
     alt: "The red and yellow Pena Palace in Sintra",
     by: "Julia Solonina",
     page: "https://unsplash.com/photos/yellow-and-red-concrete-building-under-clear-blue-sky-ci19YINguoc",
-    tone: ["#E8A23D", "#7A2E33"],
+    tone: ["#7A2E33", "#E0C9A6"],
   },
   trainWindow: {
     id: "1761165307483-8f293ad3f1e9",

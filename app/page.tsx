@@ -47,7 +47,7 @@ export default function HomePage() {
               Whole trips with the price of the whole trip. Flights in.
             </p>
           </div>
-          <Link href="/app/explore" className="hidden shrink-0 text-sm font-semibold text-terracotta-dark underline-offset-4 hover:underline sm:block">
+          <Link href="/app/explore" className="hidden shrink-0 text-sm font-semibold text-accent-dark underline-offset-4 hover:underline sm:block">
             See all in Explore
           </Link>
         </div>
@@ -69,7 +69,7 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:gap-16 md:px-8 md:py-24">
-        <Photo name="trainWindow" width={720} className="aspect-[4/3] rounded-2xl md:aspect-[5/4]" />
+        <Photo name="trainWindow" width={720} className="aspect-[4/3] rounded-3xl md:aspect-[5/4]" />
         <div>
           <h2 className="font-serif text-3xl font-semibold leading-tight tracking-tightish text-ink md:text-4xl">
             Travel isn&rsquo;t a luxury. It&rsquo;s yours.
@@ -82,7 +82,7 @@ export default function HomePage() {
           <ul className="mt-6 space-y-2.5 text-[15px] text-ink/85">
             {["No ads, no sponsored placements.", "Real prices, even the ugly ones.", "Notes from people who have actually been there."].map((t) => (
               <li key={t} className="flex items-start gap-3">
-                <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />
+                <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                 {t}
               </li>
             ))}

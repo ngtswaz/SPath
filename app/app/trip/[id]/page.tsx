@@ -1,118 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { DESTINATIONS, TRIPS, countryName, type ItinerarySlot } from "@/lib/app-data";
 import { KEYS, useLocal } from "@/lib/store";
 import Button from "@/components/Button";
+import Sheet from "@/components/app/Sheet";
 import Photo from "@/components/ui/Photo";
 import Icon from "@/components/ui/icons";
 import { Card, EmptyState, Notice, Tag } from "@/components/ui";
 import type { StoredCard, StoredPoints } from "@/components/app/editors";
 
-function Slot({
+const ROUND_BUTTON =
+  "flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-ink shadow-float transition-transform active:scale-90";
+
+const CHIP =
+  "inline-flex min-h-[40px] items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition-transform active:scale-95";
+
+function SlotRow({
   slot,
   choice,
-  onChoose,
   perkApplied,
-  onTogglePerk,
-  hasWallet,
+  onOpenOptions,
+  onOpenPerk,
 }: {
   slot: ItinerarySlot;
   choice: number;
-  onChoose: (index: number) => void;
   perkApplied: boolean;
-  onTogglePerk: () => void;
-  hasWallet: boolean;
+  onOpenOptions: () => void;
+  onOpenPerk: () => void;
 }) {
-  const [open, setOpen] = useState<"options" | "perk" | null>(null);
   const picked = slot.options[choice] ?? slot.options[0];
   const others = slot.options.length - 1;
 
   return (
-    <li className="border-b border-ink/10 px-4 py-4 last:border-b-0 sm:px-5">
-      <div className="flex gap-4">
-        <span className="w-12 shrink-0 pt-0.5 font-mono text-sm font-bold text-ink/70">{slot.time}</span>
-        <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-semibold leading-snug text-ink">{picked.name}</p>
-          {picked.note && <p className="mt-0.5 text-sm leading-snug text-ink/70">{picked.note}</p>}
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            {others > 0 && (
-              <button
-                type="button"
-                aria-expanded={open === "options"}
-                onClick={() => setOpen(open === "options" ? null : "options")}
-                className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full border border-ink/20 bg-white px-3 text-[13px] font-semibold text-ink hover:border-ink/40"
-              >
-                {others} other {others === 1 ? "option" : "options"}
-              </button>
-            )}
-            {slot.perk && (
-              <button
-                type="button"
-                aria-expanded={open === "perk"}
-                onClick={() => setOpen(open === "perk" ? null : "perk")}
-                className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-[13px] font-semibold ${
-                  perkApplied ? "bg-trail/10 text-trail" : "bg-terracotta/10 text-terracotta-dark hover:bg-terracotta/20"
-                }`}
-              >
-                <Icon name={perkApplied ? "check" : "wallet"} size={15} />
-                {perkApplied ? "Perk applied" : "Perk offer"}
-              </button>
-            )}
-          </div>
-
-          {open === "options" && (
-            <fieldset className="mt-3 rounded-xl bg-cream p-2">
-              <legend className="sr-only">Options for {slot.time}</legend>
-              {slot.options.map((o, i) => (
-                <label
-                  key={o.name}
-                  className="flex cursor-pointer items-start gap-3 rounded-lg px-2.5 py-2.5 hover:bg-white has-[:checked]:bg-white"
-                >
-                  <input
-                    type="radio"
-                    name={slot.id}
-                    checked={i === choice}
-                    onChange={() => {
-                      onChoose(i);
-                      setOpen(null);
-                    }}
-                    className="mt-1 h-4 w-4 shrink-0 accent-[#9E411F]"
-                  />
-                  <span className="min-w-0">
-                    <span className="block text-sm font-semibold text-ink">
-                      {o.name}
-                      {i === 0 && <span className="ml-2 text-xs font-medium text-ink/60">Planner&rsquo;s pick</span>}
-                    </span>
-                    {o.note && <span className="block text-[13px] leading-snug text-ink/70">{o.note}</span>}
-                  </span>
-                </label>
-              ))}
-            </fieldset>
+    <li className="flex gap-4 border-b border-ink/10 px-4 py-4 last:border-b-0 sm:px-5">
+      <span className="w-12 shrink-0 pt-0.5 font-mono text-sm font-bold text-ink/70">{slot.time}</span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[15px] font-semibold leading-snug text-ink">{picked.name}</p>
+        {picked.note && <p className="mt-0.5 text-sm leading-snug text-ink/70">{picked.note}</p>}
+        <div className="mt-2.5 flex flex-wrap items-center gap-2">
+          {others > 0 && (
+            <button type="button" onClick={onOpenOptions} className={`${CHIP} border border-ink/15 bg-white text-ink`}>
+              {others} other {others === 1 ? "option" : "options"}
+            </button>
           )}
-
-          {open === "perk" && slot.perk && (
-            <div className="mt-3 rounded-xl border border-terracotta/25 bg-terracotta/[0.06] p-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="text-sm font-semibold text-ink">{slot.perk.title}</p>
-                <Tag>Sample offer</Tag>
-              </div>
-              <p className="mt-1 text-sm leading-relaxed text-ink/80">{slot.perk.body}</p>
-              {!hasWallet && (
-                <p className="mt-2 text-[13px] text-ink/70">
-                  <Link href="/app/wallet" className="font-semibold text-terracotta-dark underline-offset-4 hover:underline">
-                    Add your cards and points
-                  </Link>{" "}
-                  so offers can be matched to what you actually hold.
-                </p>
-              )}
-              <div className="mt-3">
-                <Button variant={perkApplied ? "secondary" : "primary"} onClick={onTogglePerk} className="min-h-[40px] px-4 py-2 text-sm">
-                  {perkApplied ? "Remove perk" : "Apply to this slot"}
-                </Button>
-              </div>
-            </div>
+          {slot.perk && (
+            <button
+              type="button"
+              onClick={onOpenPerk}
+              className={`${CHIP} ${perkApplied ? "bg-trail/10 text-trail" : "bg-accent/10 text-accent-dark"}`}
+            >
+              <Icon name={perkApplied ? "check" : "wallet"} size={15} />
+              {perkApplied ? "Perk applied" : "Perk offer"}
+            </button>
           )}
         </div>
       </div>
@@ -131,6 +73,10 @@ export default function TripPage({ params }: { params: { id: string } }) {
   const [points] = useLocal<StoredPoints[]>(KEYS.points, []);
   const [passports] = useLocal<string[]>(KEYS.passports, []);
 
+  const pager = useRef<HTMLDivElement>(null);
+  const [day, setDay] = useState(0);
+  const [sheet, setSheet] = useState<{ kind: "options" | "perk"; slot: ItinerarySlot } | null>(null);
+
   if (!trip || !destination) {
     return (
       <div className="mx-auto max-w-lg py-16">
@@ -146,88 +92,143 @@ export default function TripPage({ params }: { params: { id: string } }) {
   const isSaved = saved.includes(destination.id);
   const perks = trip.days.flatMap((d) => d.slots).filter((s) => s.perk);
   const changed = Object.values(choices).filter((v) => v > 0).length;
+  const hasWallet = cards.length + points.length > 0;
+
+  function goToDay(i: number) {
+    const el = pager.current;
+    if (el) el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+  }
+
+  function onPagerScroll() {
+    const el = pager.current;
+    if (el && el.clientWidth) setDay(Math.round(el.scrollLeft / el.clientWidth));
+  }
+
+  const sheetSlot = sheet?.slot;
+  const sheetPerk = sheet?.kind === "perk" ? sheet.slot.perk : undefined;
+  const sheetPerkApplied = !!sheetPerk && applied.includes(sheetPerk.id);
 
   return (
     <div>
-      <Link href="/app/explore" className="mb-3 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-ink/75 hover:text-ink">
-        <Icon name="arrow" size={16} className="rotate-180" />
-        Explore
-      </Link>
-
-      <Photo name={destination.photo} width={1040} eager className="aspect-[4/3] rounded-2xl sm:aspect-[16/7]">
-        <div className="absolute inset-0 bg-gradient-to-t from-night/80 via-night/20 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 md:p-7">
-          <div>
-            <p className="text-sm font-medium text-white/90">{destination.country}</p>
-            <h1 className="font-serif text-4xl font-semibold leading-none tracking-tightish text-white md:text-6xl">{destination.name}</h1>
+      {/* On a phone the photo runs edge to edge under the status bar, with
+          the back and save buttons floating on it. */}
+      <div className="-mx-5 mt-[calc(-1*max(1.75rem,env(safe-area-inset-top)))] md:mx-0 md:mt-0">
+        <Photo name={destination.photo} width={1040} eager className="h-[44svh] min-h-[300px] rounded-b-[32px] md:h-auto md:min-h-0 md:aspect-[16/7] md:rounded-3xl">
+          <div className="absolute inset-0 bg-gradient-to-t from-night/80 via-night/15 to-night/25" />
+          <div className="absolute inset-x-4 top-[max(1rem,env(safe-area-inset-top))] flex items-center justify-between md:inset-x-5 md:top-5">
+            <Link href="/app/explore" aria-label="Back to Explore" className={ROUND_BUTTON}>
+              <Icon name="arrow" size={19} className="rotate-180" />
+            </Link>
+            <button
+              type="button"
+              aria-label={isSaved ? "Remove from saved" : "Save this trip"}
+              aria-pressed={isSaved}
+              onClick={() => setSaved((s) => (isSaved ? s.filter((x) => x !== destination.id) : [...s, destination.id]))}
+              className={ROUND_BUTTON}
+            >
+              <Icon name="saved" size={19} filled={isSaved} className={isSaved ? "text-accent-dark" : ""} />
+            </button>
           </div>
-          <button
-            type="button"
-            aria-label={isSaved ? "Remove from saved" : "Save this trip"}
-            aria-pressed={isSaved}
-            onClick={() => setSaved((s) => (isSaved ? s.filter((x) => x !== destination.id) : [...s, destination.id]))}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/95 text-ink shadow-float transition-transform active:scale-90"
-          >
-            <Icon name="saved" size={19} filled={isSaved} className={isSaved ? "text-terracotta" : ""} />
-          </button>
-        </div>
-      </Photo>
+          <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
+            <p className="text-sm font-medium text-white/90">{destination.country}</p>
+            <h1 className="font-serif text-[44px] font-semibold leading-none tracking-tightish text-white md:text-6xl">{destination.name}</h1>
+          </div>
+        </Photo>
+      </div>
 
-      {/* On phones the summary card sits below the days, so the three facts
-          people check first are repeated here, right under the photo. */}
-      <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm lg:hidden">
-        <div>
-          <dt className="text-ink/65">Dates</dt>
-          <dd className="font-mono font-bold text-ink">{trip.dateRange}</dd>
-        </div>
-        <div>
-          <dt className="text-ink/65">Planned</dt>
-          <dd className="font-mono font-bold text-ink">{trip.days.length}+ days</dd>
-        </div>
-        <div>
-          <dt className="text-ink/65">Budget</dt>
-          <dd className="font-mono font-bold text-ink">${trip.budget} all in</dd>
-        </div>
+      {/* The three facts people check first, as a row you can flick through. */}
+      <dl className="no-scrollbar -mx-5 mt-4 flex gap-2.5 overflow-x-auto px-5 lg:hidden">
+        {[
+          ["Dates", trip.dateRange],
+          ["Planned", `${trip.days.length}+ days`],
+          ["Budget", `$${trip.budget} all in`],
+        ].map(([label, value]) => (
+          <div key={label} className="shrink-0 rounded-3xl border border-ink/10 bg-white px-4 py-3">
+            <dt className="text-xs text-ink/65">{label}</dt>
+            <dd className="font-mono text-sm font-bold text-ink">{value}</dd>
+          </div>
+        ))}
       </dl>
 
       <div className="mt-7 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-        <div>
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-serif text-2xl font-semibold tracking-tightish text-ink">Your days</h2>
             <Tag>Sample itinerary</Tag>
           </div>
 
-          <ol className="space-y-7">
-            {trip.days.map((day) => (
-              <li key={day.day}>
-                <div className="mb-3 flex items-center gap-3.5">
-                  <Photo name={day.photo} width={160} className="h-16 w-16 shrink-0 rounded-xl" />
-                  <div>
-                    <p className="font-mono text-xs font-bold text-terracotta-dark">Day {day.day}</p>
-                    <h3 className="font-serif text-xl font-semibold tracking-tightish text-ink">{day.title}</h3>
-                  </div>
-                </div>
-                <Card>
+          {/* Day tabs. The highlight is one element that glides to the day in view. */}
+          <div role="tablist" aria-label="Days" className="no-scrollbar -mx-5 flex gap-1.5 overflow-x-auto px-5 md:mx-0 md:px-0">
+            {trip.days.map((d, i) => (
+              <button
+                key={d.day}
+                type="button"
+                role="tab"
+                id={`day-tab-${d.day}`}
+                aria-selected={day === i}
+                aria-controls={`day-panel-${d.day}`}
+                onClick={() => goToDay(i)}
+                className={`relative min-h-[44px] shrink-0 rounded-full px-5 text-sm font-semibold transition-colors ${
+                  day === i ? "text-bone" : "text-ink/75"
+                }`}
+              >
+                {day === i && (
+                  <motion.span
+                    layoutId="day-highlight"
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-full bg-ink"
+                    transition={{ type: "spring", damping: 32, stiffness: 380 }}
+                  />
+                )}
+                <span className="relative">Day {d.day}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* One day per page. Swipe sideways, or tap a day above. */}
+          <div
+            ref={pager}
+            onScroll={onPagerScroll}
+            className="no-scrollbar -mx-5 mt-4 flex snap-x snap-mandatory items-start overflow-x-auto md:mx-0"
+          >
+            {trip.days.map((d, i) => (
+              <section
+                key={d.day}
+                role="tabpanel"
+                id={`day-panel-${d.day}`}
+                aria-labelledby={`day-tab-${d.day}`}
+                // Off-screen days stay out of the tab order until swiped to.
+                // (Spread as a string: React 18 drops a boolean `inert`.)
+                {...(day === i ? {} : ({ inert: "" } as object))}
+                className="w-full shrink-0 snap-center px-5 md:px-0"
+              >
+                <Photo name={d.photo} width={720} className="aspect-[16/8] rounded-3xl">
+                  <div className="absolute inset-0 bg-gradient-to-t from-night/75 to-transparent" />
+                  <h3 className="absolute bottom-4 left-5 right-5 font-serif text-2xl font-semibold tracking-tightish text-white">{d.title}</h3>
+                </Photo>
+                <Card className="mt-3">
                   <ul>
-                    {day.slots.map((slot) => (
-                      <Slot
+                    {d.slots.map((slot) => (
+                      <SlotRow
                         key={slot.id}
                         slot={slot}
                         choice={choices[slot.id] ?? 0}
-                        onChoose={(i) => setChoices((c) => ({ ...c, [slot.id]: i }))}
                         perkApplied={!!slot.perk && applied.includes(slot.perk.id)}
-                        onTogglePerk={() =>
-                          slot.perk &&
-                          setApplied((a) => (a.includes(slot.perk!.id) ? a.filter((x) => x !== slot.perk!.id) : [...a, slot.perk!.id]))
-                        }
-                        hasWallet={cards.length + points.length > 0}
+                        onOpenOptions={() => setSheet({ kind: "options", slot })}
+                        onOpenPerk={() => setSheet({ kind: "perk", slot })}
                       />
                     ))}
                   </ul>
                 </Card>
-              </li>
+              </section>
             ))}
-          </ol>
+          </div>
+
+          <div aria-hidden="true" className="mt-4 flex justify-center gap-1.5">
+            {trip.days.map((d, i) => (
+              <span key={d.day} className={`h-1.5 rounded-full transition-all duration-200 ${i === day ? "w-5 bg-ink" : "w-1.5 bg-ink/25"}`} />
+            ))}
+          </div>
 
           <Notice className="mt-7" title="This is a sample itinerary">
             Live prices, booking links and perk offers matched to your real cards arrive when
@@ -279,7 +280,7 @@ export default function TripPage({ params }: { params: { id: string } }) {
             </p>
             <Link
               href={passports.length === 0 ? "/app/passports" : `/app/visa?to=${destination.id}`}
-              className="mt-2 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-terracotta-dark underline-offset-4 hover:underline"
+              className="mt-2 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-accent-dark underline-offset-4 hover:underline"
             >
               {passports.length === 0 ? "Add a passport" : "Open visa check"}
               <Icon name="arrow" size={16} />
@@ -289,13 +290,79 @@ export default function TripPage({ params }: { params: { id: string } }) {
           <Card className="p-5">
             <h2 className="font-serif text-xl font-semibold tracking-tightish text-ink">Going with others?</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink/75">Add who is coming and keep track of who paid for what.</p>
-            <Link href="/app/groups" className="mt-2 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-terracotta-dark underline-offset-4 hover:underline">
+            <Link href="/app/groups" className="mt-2 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-accent-dark underline-offset-4 hover:underline">
               Set up a group
               <Icon name="arrow" size={16} />
             </Link>
           </Card>
         </aside>
       </div>
+
+      <Sheet open={sheet?.kind === "options"} onClose={() => setSheet(null)} title={sheetSlot ? `${sheetSlot.time}, pick one` : "Options"}>
+        {sheetSlot && (
+          <div role="radiogroup" aria-label={`Options for ${sheetSlot.time}`} className="space-y-2 pb-1">
+            {sheetSlot.options.map((o, i) => {
+              const selected = (choices[sheetSlot.id] ?? 0) === i;
+              return (
+                <button
+                  key={o.name}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  onClick={() => {
+                    setChoices((c) => ({ ...c, [sheetSlot.id]: i }));
+                    setSheet(null);
+                  }}
+                  className={`flex w-full items-center gap-3 rounded-3xl border bg-white px-4 py-3.5 text-left transition-transform active:scale-[0.98] ${
+                    selected ? "border-ink" : "border-ink/10"
+                  }`}
+                >
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-semibold text-ink">
+                      {o.name}
+                      {i === 0 && <span className="ml-2 whitespace-nowrap text-xs font-medium text-ink/60">Planner&rsquo;s pick</span>}
+                    </span>
+                    {o.note && <span className="mt-0.5 block text-sm leading-snug text-ink/70">{o.note}</span>}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${selected ? "bg-ink text-bone" : "border border-ink/20"}`}
+                  >
+                    {selected && <Icon name="check" size={15} />}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </Sheet>
+
+      <Sheet open={sheet?.kind === "perk"} onClose={() => setSheet(null)} title={sheetPerk?.title ?? "Perk offer"}>
+        {sheetPerk && (
+          <div className="pb-1">
+            <Tag>Sample offer</Tag>
+            <p className="mt-3 text-[15px] leading-relaxed text-ink/80">{sheetPerk.body}</p>
+            {!hasWallet && (
+              <p className="mt-3 text-sm text-ink/70">
+                <Link href="/app/wallet" className="font-semibold text-accent-dark underline-offset-4 hover:underline">
+                  Add your cards and points
+                </Link>{" "}
+                so offers can be matched to what you actually hold.
+              </p>
+            )}
+            <Button
+              variant={sheetPerkApplied ? "secondary" : "primary"}
+              className="mt-5 w-full"
+              onClick={() => {
+                setApplied((a) => (a.includes(sheetPerk.id) ? a.filter((x) => x !== sheetPerk.id) : [...a, sheetPerk.id]));
+                setSheet(null);
+              }}
+            >
+              {sheetPerkApplied ? "Remove perk" : "Apply to this slot"}
+            </Button>
+          </div>
+        )}
+      </Sheet>
     </div>
   );
 }

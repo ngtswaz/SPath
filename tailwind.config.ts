@@ -13,13 +13,15 @@ const config: Config = {
         ink: "#26201B",
         bone: "#FAF8F4",
         cream: "#F7F2EA",
-        terracotta: {
-          DEFAULT: "#C0532E",
-          dark: "#9E411F",
-          deep: "#7C3016",
+        // The one accent. Its three shades are CSS variables (see globals.css)
+        // so the whole product changes colour from a single place.
+        accent: {
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          dark: "rgb(var(--accent-dark) / <alpha-value>)",
+          deep: "rgb(var(--accent-deep) / <alpha-value>)",
         },
         sandstone: "#E0C9A6",
-        amber: "#E8A23D",
+        sand: "#8A7350",
         trail: "#2E6E5B",
         burgundy: "#7A2E33",
         night: "#15110E",

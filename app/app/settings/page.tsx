@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DEFAULT_PROFILE, KEYS, useLocal, type Profile } from "@/lib/store";
 import Button from "@/components/Button";
+import AccentSwitch from "@/components/app/AccentSwitch";
 import { Card, Field, LinkRow, PageHeader, Section, Toggle } from "@/components/ui";
 
 interface Settings {
@@ -66,6 +67,13 @@ export default function SettingsPage() {
           <LinkRow href="/app/wallet" label="Cards and points" />
           <LinkRow href="/app/plans" label="Plan" detail="Base, free" />
         </Card>
+      </Section>
+
+      <Section title="Accent colour" className="mt-10">
+        <AccentSwitch />
+        <p className="mt-2 text-[13px] text-ink/65">
+          For the team, while a replacement for the orange is being chosen. Applies to the whole site on this device.
+        </p>
       </Section>
 
       <Section title="This device" className="mt-10">

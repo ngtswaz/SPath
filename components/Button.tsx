@@ -22,12 +22,12 @@ interface ButtonAsLink extends SharedProps {
 type Props = ButtonAsButton | ButtonAsLink;
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[15px] font-semibold transition-colors duration-150 min-h-[46px] disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold transition-[color,background-color,border-color,transform] duration-150 min-h-[48px] active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none";
 
 const variants: Record<Variant, string> = {
-  // terracotta-dark gives bone text about 6:1 contrast; plain terracotta
+  // accent-dark gives bone text about 6:1 contrast; plain accent
   // falls just short at this text size, so the darker shade is the default.
-  primary: "bg-terracotta-dark text-white hover:bg-terracotta-deep",
+  primary: "bg-accent-dark text-white hover:bg-accent-deep",
   secondary: "border border-ink/20 bg-white text-ink hover:border-ink/40",
   ghost: "bg-transparent text-ink hover:bg-ink/[0.06]",
 };

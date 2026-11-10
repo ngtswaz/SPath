@@ -23,7 +23,7 @@ export default function Steps({ className = "" }: { className?: string }) {
     <ol className={`grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 ${className}`}>
       {STEPS.map((s, i) => (
         <li key={s.title} className="border-t-2 border-ink pt-4">
-          <span className="font-mono text-sm font-bold text-terracotta-dark">{i + 1}</span>
+          <span className="font-mono text-sm font-bold text-accent-dark">{i + 1}</span>
           <h3 className="mt-2 font-serif text-xl font-semibold tracking-tightish text-ink">{s.title}</h3>
           <p className="mt-2 text-[15px] leading-relaxed text-ink/75">{s.body}</p>
         </li>

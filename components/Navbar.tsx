@@ -37,8 +37,8 @@ export default function Navbar() {
               key={l.href}
               href={l.href}
               aria-current={pathname === l.href ? "page" : undefined}
-              className={`rounded-lg px-3 py-2 text-sm font-medium hover:bg-ink/[0.06] ${
-                pathname === l.href ? "text-terracotta-dark" : "text-ink/80"
+              className={`rounded-full px-3.5 py-2 text-sm font-medium hover:bg-ink/[0.06] ${
+                pathname === l.href ? "text-accent-dark" : "text-ink/80"
               }`}
             >
               {l.label}
@@ -47,7 +47,7 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/signin" className="hidden min-h-[44px] items-center rounded-lg px-3 text-sm font-semibold text-ink hover:bg-ink/[0.06] sm:flex">
+          <Link href="/signin" className="hidden min-h-[44px] items-center rounded-full px-3.5 text-sm font-semibold text-ink hover:bg-ink/[0.06] sm:flex">
             Sign in
           </Link>
           <StartButton className="min-h-[42px] px-4 py-2 text-sm">Start exploring</StartButton>
@@ -57,7 +57,7 @@ export default function Navbar() {
             aria-expanded={open}
             aria-controls="site-menu"
             onClick={() => setOpen((o) => !o)}
-            className="flex h-11 w-11 items-center justify-center rounded-lg text-ink hover:bg-ink/[0.06] md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-ink hover:bg-ink/[0.06] md:hidden"
           >
             <Icon name={open ? "close" : "menu"} size={22} />
           </button>

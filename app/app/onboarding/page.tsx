@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { FACETS, FAMILY_COLOR, labelFromScores, scoreFromAnswers } from "@/lib/app-data";
 import Button from "@/components/Button";
 import Logo from "@/components/Logo";
@@ -12,6 +13,9 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0); // 0..FACETS.length-1 = statements, FACETS.length = result
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  // +1 when moving on, -1 when going back: decides which way cards slide.
+  const [direction, setDirection] = useState(1);
+  const reduce = useReducedMotion();
 
   const isResult = step >= FACETS.length;
   const facet = FACETS[step];
@@ -19,7 +23,13 @@ export default function OnboardingPage() {
   function answer(value: number) {
     if (!facet) return;
     setAnswers({ ...answers, [facet.key]: value });
+    setDirection(1);
     setStep((s) => s + 1);
+  }
+
+  function back() {
+    setDirection(-1);
+    setStep((s) => Math.max(0, s - 1));
   }
 
   function finish() {
@@ -39,7 +49,7 @@ export default function OnboardingPage() {
     const ranked = [...FACETS].sort((a, b) => (scores[b.key] ?? 0) - (scores[a.key] ?? 0));
 
     return (
-      <div className="flex min-h-[calc(100vh-5rem)] flex-col justify-center py-6">
+      <div className="flex min-h-[calc(100svh-5rem)] flex-col justify-center py-6">
         <p className="text-sm font-semibold text-ink/65">Your pattern, for now</p>
         <h1 className="mt-2 font-serif text-[32px] font-semibold leading-[1.12] tracking-tightish text-ink md:text-5xl">{label}</h1>
         <p className="mt-4 text-[15px] leading-relaxed text-ink/80">
@@ -81,7 +91,7 @@ export default function OnboardingPage() {
   const chosen = answers[facet.key];
 
   return (
-    <div className="flex min-h-[calc(100vh-5rem)] flex-col py-2">
+    <div className="flex min-h-[calc(100svh-5rem)] flex-col py-2">
       <div className="flex items-center justify-between">
         <Logo />
         <p className="font-mono text-xs font-bold text-ink/70">
@@ -96,44 +106,73 @@ export default function OnboardingPage() {
         aria-valuenow={step}
         className="mt-5 h-1.5 overflow-hidden rounded-full bg-ink/10"
       >
-        <div className="h-full rounded-full bg-terracotta transition-[width] duration-300" style={{ width: `${(step / FACETS.length) * 100}%` }} />
+        <div className="h-full rounded-full bg-accent transition-[width] duration-300" style={{ width: `${(step / FACETS.length) * 100}%` }} />
       </div>
 
-      <div className="flex flex-1 flex-col justify-center py-10">
-        <p className="text-sm font-semibold text-ink/65">How true is this for you?</p>
-        <h1 className="mt-3 font-serif text-[30px] font-medium leading-[1.22] tracking-tightish text-ink md:text-[40px]">
-          {facet.statement}
-        </h1>
+      {/* Each statement is a card: answering sends it off to the left and
+          brings the next in from the right. Dragging the card to the right
+          goes back one, the way you would flick back through a stack. */}
+      <div className="relative flex flex-1 flex-col justify-center overflow-x-clip py-8">
+        <AnimatePresence mode="wait" custom={direction} initial={false}>
+          <motion.div
+            key={facet.key}
+            custom={direction}
+            variants={{
+              enter: (d: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: d * 70 }),
+              centre: { opacity: 1, x: 0 },
+              exit: (d: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: d * -70 }),
+            }}
+            initial="enter"
+            animate="centre"
+            exit="exit"
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            drag={step > 0 && !reduce ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={{ left: 0, right: 0.35 }}
+            dragSnapToOrigin
+            onDragEnd={(_, info) => {
+              if (info.offset.x > 90 || info.velocity.x > 500) back();
+            }}
+            className="rounded-[28px] border border-ink/10 bg-white p-6 shadow-float md:p-9"
+          >
+            <p className="text-sm font-semibold text-ink/65">How true is this for you?</p>
+            <h1 className="mt-3 font-serif text-[28px] font-medium leading-[1.22] tracking-tightish text-ink md:text-[38px]">
+              {facet.statement}
+            </h1>
 
-        <div role="group" aria-label="Your answer, from 1 not me to 5 very me" className="mt-10">
-          <div className="grid grid-cols-5 gap-2 sm:gap-3">
-            {SCALE.map((v) => (
-              <button
-                key={v}
-                type="button"
-                aria-pressed={chosen === v}
-                aria-label={v === 1 ? "1, not me" : v === 5 ? "5, very me" : String(v)}
-                onClick={() => answer(v)}
-                className={`flex h-16 items-center justify-center rounded-xl border text-xl font-semibold transition-colors ${
-                  chosen === v
-                    ? "border-ink bg-ink text-bone"
-                    : "border-ink/20 bg-white text-ink hover:border-terracotta-dark hover:bg-terracotta/10"
-                }`}
-              >
-                {v}
-              </button>
-            ))}
-          </div>
-          <div className="mt-2.5 flex justify-between text-sm font-medium text-ink/70" aria-hidden="true">
-            <span>Not me</span>
-            <span>Very me</span>
-          </div>
-        </div>
+            <div role="group" aria-label="Your answer, from 1 not me to 5 very me" className="mt-9">
+              <div className="grid grid-cols-5 gap-2 sm:gap-3">
+                {SCALE.map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    aria-pressed={chosen === v}
+                    aria-label={v === 1 ? "1, not me" : v === 5 ? "5, very me" : String(v)}
+                    onClick={() => answer(v)}
+                    // Stops a tap on a number from starting a card drag.
+                    onPointerDownCapture={(e) => e.stopPropagation()}
+                    className={`flex aspect-square max-h-[72px] w-full items-center justify-center rounded-full border text-xl font-semibold transition-[background-color,border-color,transform] duration-150 active:scale-90 ${
+                      chosen === v
+                        ? "border-ink bg-ink text-bone"
+                        : "border-ink/20 bg-white text-ink hover:border-accent-dark hover:bg-accent/10"
+                    }`}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 flex justify-between text-sm font-medium text-ink/70" aria-hidden="true">
+                <span>Not me</span>
+                <span>Very me</span>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      <div className="flex min-h-[46px] items-center justify-between">
+      <div className="flex min-h-[48px] items-center justify-between">
         {step > 0 ? (
-          <Button variant="ghost" onClick={() => setStep((s) => s - 1)} className="-ml-3">
+          <Button variant="ghost" onClick={back} className="-ml-3">
             Back
           </Button>
         ) : (

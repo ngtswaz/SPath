@@ -121,7 +121,7 @@ export default function PlanForm({ initialTo, initialDays }: { initialTo?: strin
             {DENSITY.map((d) => (
               <label
                 key={d.id}
-                className={`flex min-h-[64px] cursor-pointer flex-col justify-center rounded-xl border px-4 py-2.5 transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta-dark ${
+                className={`flex min-h-[64px] cursor-pointer flex-col justify-center rounded-2xl border px-4 py-2.5 transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent-dark ${
                   density === d.id ? "border-ink bg-ink text-bone" : "border-ink/20 bg-white text-ink hover:border-ink/40"
                 }`}
               >
@@ -137,7 +137,7 @@ export default function PlanForm({ initialTo, initialDays }: { initialTo?: strin
           <input id="plan-from" className="field" value={from} onChange={(e) => setFrom(e.target.value)} placeholder="Your home city" />
         </Field>
 
-        <div className="flex items-center justify-between gap-4 rounded-xl border border-ink/10 bg-white px-4 py-3.5">
+        <div className="flex items-center justify-between gap-4 rounded-2xl border border-ink/10 bg-white px-4 py-3.5">
           <div>
             <p className="text-sm font-semibold text-ink">Points and miles</p>
             <p className="text-[13px] text-ink/65">
@@ -146,7 +146,7 @@ export default function PlanForm({ initialTo, initialDays }: { initialTo?: strin
                 : `${points.length} ${points.length === 1 ? "balance" : "balances"} will be considered for this trip.`}
             </p>
           </div>
-          <Link href="/app/wallet" className="shrink-0 text-sm font-semibold text-terracotta-dark underline-offset-4 hover:underline">
+          <Link href="/app/wallet" className="shrink-0 text-sm font-semibold text-accent-dark underline-offset-4 hover:underline">
             {points.length === 0 ? "Add" : "Edit"}
           </Link>
         </div>

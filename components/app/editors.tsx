@@ -50,7 +50,7 @@ export function PassportEditor() {
   return (
     <div>
       {passports.length > 0 && (
-        <ul className="mb-4 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white">
+        <ul className="mb-4 divide-y divide-ink/10 rounded-3xl border border-ink/10 bg-white">
           {passports.map((code, i) => (
             <li key={code} className="flex items-center gap-3 py-1.5 pl-4 pr-1.5">
               <span className="font-mono text-sm font-bold text-ink/70">{code}</span>
@@ -99,7 +99,7 @@ export function CardEditor() {
   return (
     <div>
       {cards.length > 0 && (
-        <ul className="mb-4 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white">
+        <ul className="mb-4 divide-y divide-ink/10 rounded-3xl border border-ink/10 bg-white">
           {cards.map((c) => (
             <li key={c.id} className="flex items-center gap-3 py-1.5 pl-4 pr-1.5">
               <Icon name="wallet" className="text-ink/60" />
@@ -147,7 +147,7 @@ export function PointsEditor() {
   return (
     <div>
       {points.length > 0 && (
-        <ul className="mb-4 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white">
+        <ul className="mb-4 divide-y divide-ink/10 rounded-3xl border border-ink/10 bg-white">
           {points.map((p) => (
             <li key={p.id} className="flex items-center gap-3 py-1.5 pl-4 pr-1.5">
               <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-ink">{p.program}</span>

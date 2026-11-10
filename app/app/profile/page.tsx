@@ -24,7 +24,7 @@ export default function ProfilePage() {
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
       <div className="space-y-10">
         <header className="flex items-center gap-4">
-          <span className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full bg-terracotta-dark font-serif text-3xl font-semibold text-white">
+          <span className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full bg-accent-dark font-serif text-3xl font-semibold text-white">
             {profileReady && profile.name ? profile.name.charAt(0).toUpperCase() : ""}
           </span>
           <div className="min-w-0 flex-1">
@@ -56,7 +56,7 @@ export default function ProfilePage() {
             <Section
               title="How you travel"
               action={
-                <Link href="/app/onboarding" className="text-sm font-semibold text-terracotta-dark underline-offset-4 hover:underline">
+                <Link href="/app/onboarding" className="text-sm font-semibold text-accent-dark underline-offset-4 hover:underline">
                   Retake the quiz
                 </Link>
               }
@@ -90,7 +90,7 @@ export default function ProfilePage() {
           </ul>
         </Section>
 
-        <Section title="Your trips" action={<Link href="/app/trips" className="text-sm font-semibold text-terracotta-dark underline-offset-4 hover:underline">See all</Link>}>
+        <Section title="Your trips" action={<Link href="/app/trips" className="text-sm font-semibold text-accent-dark underline-offset-4 hover:underline">See all</Link>}>
           <Card className="px-4">
             {TRIPS.map((trip) => {
               const d = DESTINATIONS.find((x) => x.id === trip.destinationId);

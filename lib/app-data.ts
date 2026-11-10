@@ -37,9 +37,9 @@ export const FACETS: Facet[] = [
 ];
 
 export const FAMILY_COLOR: Record<FacetFamily, string> = {
-  Cultural: "#9E411F", // terracotta-dark
+  Cultural: "#7A2E33", // burgundy
   Adventure: "#2E6E5B", // trail
-  Restorative: "#7A2E33", // burgundy
+  Restorative: "#8A7350", // sand
 };
 
 export type FacetScores = Record<string, number>; // facet key -> 0-100

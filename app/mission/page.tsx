@@ -22,7 +22,7 @@ export default function MissionPage() {
       title="Travel isn’t a luxury. It’s yours."
       lede="We built Sidepath to dismantle the belief that travel is reserved for some people. Not with ads. Not with a booking fee hiding in the fine print. With the planning, the budgets, the visas and the points, untied."
     >
-      <Photo name="platform" width={1040} className="aspect-[16/7] rounded-2xl" />
+      <Photo name="platform" width={1040} className="aspect-[16/7] rounded-3xl" />
 
       <section className="mt-14 grid gap-10 md:grid-cols-2 md:gap-14">
         <div>
@@ -49,14 +49,14 @@ export default function MissionPage() {
         <ul className="mt-5 grid gap-x-10 sm:grid-cols-2">
           {VALUES.map((v) => (
             <li key={v} className="flex items-center gap-3 border-t border-ink/15 py-4 text-[17px] text-ink">
-              <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />
+              <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
               {v}
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="mt-16 rounded-2xl bg-night p-7 text-bone md:p-12">
+      <section className="mt-16 rounded-3xl bg-night p-7 text-bone md:p-12">
         <h2 className="font-serif text-3xl font-semibold tracking-tightish">The Legacy Flight Foundation</h2>
         <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-bone/85">
           When community growth hits density, a share of revenue funds the first

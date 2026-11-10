@@ -46,7 +46,7 @@ export default function EsimPage() {
         <ol className="grid gap-5 sm:grid-cols-3">
           {STEPS.map((s, i) => (
             <li key={s.title} className="border-t-2 border-ink pt-3">
-              <span className="font-mono text-sm font-bold text-terracotta-dark">{i + 1}</span>
+              <span className="font-mono text-sm font-bold text-accent-dark">{i + 1}</span>
               <h3 className="mt-1 text-[15px] font-semibold text-ink">{s.title}</h3>
               <p className="mt-1 text-sm leading-relaxed text-ink/75">{s.body}</p>
             </li>

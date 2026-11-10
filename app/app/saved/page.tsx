@@ -21,10 +21,11 @@ export default function SavedPage() {
           action={<Button href="/app/explore">Go to Explore</Button>}
         />
       ) : (
-        <div className="grid gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {places.map((d) => (
             <DestinationCard
               key={d.id}
+              variant="cover"
               destination={d}
               match={matchPercent(scores, d.facetScores)}
               saved

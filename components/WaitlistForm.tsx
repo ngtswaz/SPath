@@ -44,7 +44,7 @@ export default function WaitlistForm() {
             particleCount: 60,
             spread: 70,
             origin: { y: 0.6 },
-            colors: ["#C0532E", "#E8A23D", "#2E6E5B", "#E0C9A6"],
+            colors: ["#2E6E5B", "#E0C9A6", "#26201B", "#7A2E33"],
           });
         }
       }
@@ -56,7 +56,7 @@ export default function WaitlistForm() {
 
   if (status === "done") {
     return (
-      <p className="rounded-xl border border-trail/40 bg-trail/10 px-5 py-4 font-medium text-trail">
+      <p className="rounded-2xl border border-trail/40 bg-trail/10 px-5 py-4 font-medium text-trail">
         {message}
       </p>
     );

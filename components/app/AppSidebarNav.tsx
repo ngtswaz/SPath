@@ -33,8 +33,8 @@ export default function AppSidebarNav() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-[42px] items-center gap-3 rounded-xl px-3 text-[14.5px] ${
-                  active ? "bg-white font-semibold text-terracotta-dark shadow-[0_0_0_1px_rgba(38,32,27,0.08)]" : "font-medium text-ink/80 hover:bg-ink/[0.05]"
+                className={`flex min-h-[42px] items-center gap-3 rounded-full px-3.5 text-[14.5px] ${
+                  active ? "bg-white font-semibold text-accent-dark shadow-[0_0_0_1px_rgba(38,32,27,0.08)]" : "font-medium text-ink/80 hover:bg-ink/[0.05]"
                 }`}
               >
                 <Icon name={item.icon} size={19} />

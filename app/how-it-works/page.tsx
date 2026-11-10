@@ -43,14 +43,14 @@ export default function HowItWorksPage() {
         {STEPS.map((s, i) => (
           <li key={s.title} className="grid gap-5 border-t-2 border-ink pt-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:gap-12">
             <div>
-              <span className="font-mono text-sm font-bold text-terracotta-dark">Step {i + 1}</span>
+              <span className="font-mono text-sm font-bold text-accent-dark">Step {i + 1}</span>
               <h2 className="mt-2 font-serif text-3xl font-semibold tracking-tightish text-ink">{s.title}</h2>
               <p className="mt-3 text-[17px] leading-relaxed text-ink/80">{s.body}</p>
             </div>
             <ul className="space-y-3 text-[15px] leading-relaxed text-ink/85">
               {DETAIL[i].map((t) => (
                 <li key={t} className="flex items-start gap-3">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />
+                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                   {t}
                 </li>
               ))}
@@ -59,7 +59,7 @@ export default function HowItWorksPage() {
         ))}
       </ol>
 
-      <Photo name="lisbonRooftops" width={1040} className="mt-16 aspect-[16/7] rounded-2xl" />
+      <Photo name="lisbonRooftops" width={1040} className="mt-16 aspect-[16/7] rounded-3xl" />
 
       <Notice className="mt-10" title="Where this stands today">
         The quiz, Explore and a sample Lisbon itinerary work now on demo data. Live prices,

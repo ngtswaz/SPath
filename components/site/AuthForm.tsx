@@ -96,7 +96,7 @@ export default function AuthForm({ mode }: { mode: "signin" | "signup" }) {
 
           <p className="mt-5 text-sm text-ink/75">
             {signup ? "Already have an account?" : "New here?"}{" "}
-            <Link href={signup ? "/signin" : "/signup"} className="font-semibold text-terracotta-dark underline-offset-4 hover:underline">
+            <Link href={signup ? "/signin" : "/signup"} className="font-semibold text-accent-dark underline-offset-4 hover:underline">
               {signup ? "Sign in" : "Create an account"}
             </Link>
           </p>

@@ -57,14 +57,14 @@ export function Section({
 
 /** A bordered surface. Used for objects (a trip, a card, a form), not as page furniture. */
 export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`rounded-2xl border border-ink/10 bg-white ${className}`}>{children}</div>;
+  return <div className={`rounded-3xl border border-ink/10 bg-white ${className}`}>{children}</div>;
 }
 
 const TAG_TONES = {
   neutral: "bg-ink/[0.06] text-ink/80",
   good: "bg-trail/10 text-trail",
-  accent: "bg-terracotta/10 text-terracotta-dark",
-  warn: "bg-amber/20 text-ink",
+  accent: "bg-accent/10 text-accent-dark",
+  warn: "bg-sandstone/60 text-ink",
 } as const;
 
 export function Tag({ children, tone = "neutral" }: { children: React.ReactNode; tone?: keyof typeof TAG_TONES }) {
@@ -82,7 +82,7 @@ export function Tag({ children, tone = "neutral" }: { children: React.ReactNode;
  */
 export function Notice({ title, children, className = "" }: { title?: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className={`flex gap-3 rounded-xl border border-ink/10 bg-cream px-4 py-3.5 text-sm leading-relaxed text-ink/80 ${className}`}>
+    <div className={`flex gap-3 rounded-2xl border border-ink/10 bg-cream px-4 py-3.5 text-sm leading-relaxed text-ink/80 ${className}`}>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" className="mt-0.5 shrink-0 text-ink/60" aria-hidden="true">
         <circle cx="12" cy="12" r="9" />
         <path d="M12 11v5M12 7.6v.4" />
@@ -121,7 +121,7 @@ export function Field({
 
 export function EmptyState({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-dashed border-ink/20 px-6 py-10 text-center">
+    <div className="rounded-3xl border border-dashed border-ink/20 px-6 py-10 text-center">
       <p className="font-serif text-xl font-semibold tracking-tightish text-ink">{title}</p>
       <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-ink/70">{body}</p>
       {action && <div className="mt-5 flex justify-center">{action}</div>}
@@ -167,7 +167,7 @@ export function Toggle({
       </span>
       <span className="relative inline-flex shrink-0">
         <input id={id} type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="peer sr-only" />
-        <span className="h-7 w-12 rounded-full bg-ink/20 transition-colors peer-checked:bg-trail peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-terracotta-dark" />
+        <span className="h-7 w-12 rounded-full bg-ink/20 transition-colors peer-checked:bg-trail peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent-dark" />
         <span className="absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
       </span>
     </label>

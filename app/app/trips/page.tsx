@@ -15,7 +15,7 @@ export default function TripsPage() {
           if (!d) return null;
           return (
             <li key={trip.id}>
-              <Link href={`/app/trip/${trip.id}`} className="group flex overflow-hidden rounded-2xl border border-ink/10 bg-white hover:border-ink/30">
+              <Link href={`/app/trip/${trip.id}`} className="group flex overflow-hidden rounded-3xl border border-ink/10 bg-white hover:border-ink/30">
                 <Photo name={d.photo} width={420} className="w-[38%] max-w-[280px] shrink-0 self-stretch" />
                 <div className="flex min-w-0 flex-1 flex-col justify-between gap-5 p-4 sm:p-6">
                   <div>

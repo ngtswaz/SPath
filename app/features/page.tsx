@@ -67,7 +67,7 @@ export default function FeaturesPage() {
         {FEATURES.map((f) => (
           <li key={f.title} className="border-t border-ink/15 py-7">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-terracotta/10 text-terracotta-dark">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent-dark">
                 <Icon name={f.icon} size={22} />
               </span>
               <Tag tone={f.state === "preview" ? "good" : "neutral"}>
@@ -76,7 +76,7 @@ export default function FeaturesPage() {
             </div>
             <h2 className="mt-4 font-serif text-2xl font-semibold tracking-tightish text-ink">{f.title}</h2>
             <p className="mt-2 max-w-md text-[15px] leading-relaxed text-ink/75">{f.body}</p>
-            <Link href={f.href} className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-terracotta-dark underline-offset-4 hover:underline">
+            <Link href={f.href} className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-accent-dark underline-offset-4 hover:underline">
               Open it
               <Icon name="arrow" size={16} />
             </Link>
@@ -84,7 +84,7 @@ export default function FeaturesPage() {
         ))}
       </ul>
 
-      <div className="mt-10 rounded-2xl bg-cream p-7 md:p-10">
+      <div className="mt-10 rounded-3xl bg-cream p-7 md:p-10">
         <h2 className="font-serif text-2xl font-semibold tracking-tightish text-ink">Proof over promises</h2>
         <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink/80">
           The Legacy Flight Foundation funds a first international flight for someone

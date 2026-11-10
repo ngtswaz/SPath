@@ -92,8 +92,8 @@ export default function GroupsPage() {
       <PageHeader title="Group trips" sub="Add who is coming, log what each person paid, and see who owes whom." />
 
       {destination && (
-        <div className="mb-8 flex items-center gap-4 rounded-2xl border border-ink/10 bg-white p-3">
-          <Photo name={destination.photo} width={200} className="h-16 w-20 shrink-0 rounded-xl" />
+        <div className="mb-8 flex items-center gap-4 rounded-3xl border border-ink/10 bg-white p-3">
+          <Photo name={destination.photo} width={200} className="h-16 w-20 shrink-0 rounded-2xl" />
           <div className="min-w-0">
             <p className="text-[13px] text-ink/65">Splitting costs for</p>
             <p className="truncate font-serif text-xl font-semibold tracking-tightish text-ink">
@@ -164,7 +164,7 @@ export default function GroupsPage() {
               {group.expenses.length === 0 ? (
                 <EmptyState title="No expenses yet" body="Add the first thing someone paid for and the split appears on the right." />
               ) : (
-                <ul className="divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white">
+                <ul className="divide-y divide-ink/10 rounded-3xl border border-ink/10 bg-white">
                   {group.expenses.map((e) => (
                     <li key={e.id} className="flex items-center gap-3 py-2 pl-4 pr-1.5">
                       <span className="min-w-0 flex-1">

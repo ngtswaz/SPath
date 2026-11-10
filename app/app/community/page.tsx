@@ -4,6 +4,7 @@ import Link from "next/link";
 import { COMMUNITY_POSTS, FAMILY_COLOR, FAMILY_ROOMS, destinationByPlace } from "@/lib/app-data";
 import { useLocal } from "@/lib/store";
 import Photo from "@/components/ui/Photo";
+import Carousel from "@/components/app/Carousel";
 import Icon from "@/components/ui/icons";
 import { Notice, PageHeader, Section } from "@/components/ui";
 
@@ -15,24 +16,23 @@ export default function CommunityPage() {
       <PageHeader title="Community" sub="Real trips from people who've actually been there." />
 
       <Section title="Rooms">
-        <ul className="grid gap-3 md:grid-cols-3">
+        <Carousel label="Rooms" itemClassName="w-[78%]" gridClassName="md:grid-cols-3 md:!gap-3">
           {FAMILY_ROOMS.map((room) => (
-            <li key={room.slug}>
               <Link
+                key={room.slug}
                 href={`/app/community/${room.slug}`}
-                className="group flex h-full flex-col rounded-2xl border border-ink/10 bg-white p-5 hover:border-ink/30"
+                className="group flex h-full min-h-[190px] flex-col rounded-3xl border border-ink/10 bg-white p-5 transition-transform duration-150 hover:border-ink/30 active:scale-[0.98]"
               >
                 <span className="h-1.5 w-10 rounded-full" style={{ background: FAMILY_COLOR[room.family] }} />
                 <span className="mt-3 font-serif text-xl font-semibold tracking-tightish text-ink group-hover:underline">{room.family}</span>
                 <span className="mt-1 flex-1 text-sm leading-snug text-ink/75">{room.blurb}</span>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-terracotta-dark">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-dark">
                   Open the room
                   <Icon name="arrow" size={16} />
                 </span>
               </Link>
-            </li>
           ))}
-        </ul>
+        </Carousel>
       </Section>
 
       <Section title="Notes from the road" className="mt-10">
@@ -42,7 +42,7 @@ export default function CommunityPage() {
             const isLiked = liked.includes(post.id);
             return (
               <li key={post.id}>
-                <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white">
+                <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-ink/10 bg-white">
                   {d && <Photo name={d.photo} width={520} className="aspect-[16/10]" />}
                   <div className="flex flex-1 flex-col p-5">
                     <p className="text-xs font-semibold text-ink/65">{post.destination}</p>
@@ -67,7 +67,7 @@ export default function CommunityPage() {
                         onClick={() => setLiked((l) => (isLiked ? l.filter((x) => x !== post.id) : [...l, post.id]))}
                         className="-mr-2 flex min-h-[44px] items-center gap-1.5 rounded-full px-2.5 text-sm font-semibold text-ink hover:bg-ink/[0.05]"
                       >
-                        <Icon name="saved" size={17} filled={isLiked} className={isLiked ? "text-terracotta" : "text-ink/70"} />
+                        <Icon name="saved" size={17} filled={isLiked} className={isLiked ? "text-accent" : "text-ink/70"} />
                         <span className="font-mono text-xs">{post.likes + (isLiked ? 1 : 0)}</span>
                       </button>
                     </div>

@@ -16,16 +16,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const noTabs = bare || NO_TABS_PREFIXES.some((p) => pathname.startsWith(p));
 
   return (
-    <div className="flex min-h-screen bg-bone">
+    <div className="app-shell flex min-h-screen bg-bone">
       {!bare && <AppSidebarNav />}
 
       {/* min-w-0: a flex item's default min-width is its content's width,
           which would let one wide child push the page sideways on phones. */}
-      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <div className="flex-1">
-          <div className={`mx-auto w-full px-5 pb-12 pt-7 md:px-10 md:pt-10 ${bare ? "max-w-[620px]" : "max-w-[1040px]"}`}>
-            {children}
-          </div>
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-clip">
+        {/* Top padding respects a phone's notch; bottom padding on phones
+            leaves room for the floating tab bar. */}
+        <div
+          className={`mx-auto w-full flex-1 px-5 pt-[max(1.75rem,env(safe-area-inset-top))] md:px-10 md:pb-12 md:pt-10 ${
+            noTabs ? "pb-12" : "pb-32"
+          } ${bare ? "max-w-[620px]" : "max-w-[1040px]"}`}
+        >
+          {children}
         </div>
         {!noTabs && <AppBottomNav />}
       </div>

@@ -6,10 +6,7 @@
   --ink: #26201b;
   --bone: #faf8f4;
   --cream: #f7f2ea;
-  --terracotta: #c0532e;
-  --terracotta-dark: #9e411f;
   --sandstone: #e0c9a6;
-  --amber: #e8a23d;
   --trail: #2e6e5b;
   --burgundy: #7a2e33;
   --night: #15110e;
@@ -37,25 +34,70 @@ a {
   color: inherit;
 }
 
+/* The accent, as three shades in "r g b" form so Tailwind can add opacity:
+   --accent      tints, dots, progress
+   --accent-dark buttons and links (passes 4.5:1 on white and on bone)
+   --accent-deep hover and pressed
+   Changing the product's colour means changing these three lines. The
+   data-accent blocks below are the candidates being compared; once one is
+   chosen, move its values up here and delete the rest. */
+:root,
+[data-accent="green"] {
+  --accent: 46 110 91;
+  --accent-dark: 36 88 74;
+  --accent-deep: 27 68 57;
+}
+[data-accent="blue"] {
+  --accent: 47 102 144;
+  --accent-dark: 35 82 122;
+  --accent-deep: 26 63 95;
+}
+[data-accent="burgundy"] {
+  --accent: 142 58 64;
+  --accent-dark: 122 46 51;
+  --accent-deep: 95 34 39;
+}
+[data-accent="ink"] {
+  --accent: 38 32 27;
+  --accent-dark: 38 32 27;
+  --accent-deep: 0 0 0;
+}
+
 ::selection {
-  background: var(--terracotta);
+  background: rgb(var(--accent-dark));
   color: var(--bone);
 }
 
 /* One focus style for every control, so keyboard users always get the same cue. */
 :focus-visible {
-  outline: 2px solid var(--terracotta-dark);
+  outline: 2px solid rgb(var(--accent-dark));
   outline-offset: 2px;
 }
 
 @layer components {
   /* Text inputs, selects and textareas share one look. */
   .field {
-    @apply min-h-[46px] w-full rounded-xl border border-ink/20 bg-white px-3.5 text-[15px] text-ink placeholder:text-ink/45;
+    @apply min-h-[52px] w-full rounded-2xl border border-ink/15 bg-white px-4 text-base text-ink placeholder:text-ink/45;
   }
   .field:focus-visible {
-    @apply border-terracotta-dark outline-offset-0;
+    @apply border-accent-dark outline-offset-0;
   }
+}
+
+/* Touch behaviour for the product screens: no grey flash on tap, no
+   double-tap zoom delay, and no rubber-band scroll dragging the whole app. */
+.app-shell {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior-y: none;
+}
+
+/* Swipeable rows hide their scrollbar; the dots underneath show position. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
