@@ -23,7 +23,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: var(--bone);
+  background: var(--cream);
   color: var(--ink);
 }
 
@@ -40,6 +40,29 @@ a {
 ::selection {
   background: var(--terracotta);
   color: var(--bone);
+}
+
+/* Aged chart paper: a fine grain tile over a large, soft tea-stain tile.
+   Both are tiny static SVGs in /public, so the texture costs two cached
+   images instead of a live filter on every screen. */
+.paper {
+  background-color: var(--cream);
+  background-image: url("/paper-grain.svg"), url("/paper-stain.svg");
+  background-size: 240px 240px, 900px 900px;
+}
+
+/* Sandstone creeping in from the edges, like a sheet that has been handled. */
+.paper-edge {
+  box-shadow: inset 0 0 70px rgba(224, 201, 166, 0.95),
+    inset 0 0 18px rgba(59, 42, 33, 0.14);
+}
+
+/* Dotted leader between a name and its figure, as in a ship's manifest. */
+.leader {
+  flex: 1 1 0%;
+  min-width: 12px;
+  border-bottom: 1.5px dotted rgba(38, 32, 27, 0.5);
+  transform: translateY(-4px);
 }
 
 /* The brand's winding-path motif, reused as an SVG stroke utility. */

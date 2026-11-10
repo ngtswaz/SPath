@@ -9,7 +9,7 @@ export default function Footer() {
   if (pathname?.startsWith("/app")) return null;
 
   return (
-    <footer className="relative border-t border-ink/10 bg-cream">
+    <footer className="paper relative border-t-[1.5px] border-dashed border-ink/50">
       <svg
         viewBox="0 0 400 24"
         preserveAspectRatio="none"

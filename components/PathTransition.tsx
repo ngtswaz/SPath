@@ -9,12 +9,10 @@ const DRAW_MS = 1100;
 const FADE_MS = 300;
 
 /**
- * The globe's replacement as connective tissue between routes: the brand's
- * winding-path line draws itself across a warm photo-toned panel, then the
- * whole panel fades to reveal the page underneath — the same motif used in
- * the hero and on Explore's route map, now also carrying the transition.
- * No 3D canvas, so no OrbitControls touch-scroll trap and nothing to keep
- * alive between route changes.
+ * The connective tissue between routes: a blank sheet of chart paper, the
+ * brand's winding trail inked across it to an X, then the sheet fades to
+ * reveal the page underneath. Same motif as the home chart and Explore's
+ * map, so moving between screens reads as following the trail.
  */
 export default function PathTransition({
   children,
@@ -55,26 +53,42 @@ export default function PathTransition({
         }`}
       >
         {active && (
-          <div
-            key={runId}
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 120% 70% at 30% 110%, rgba(38,32,27,.55), transparent 60%), linear-gradient(180deg, #E8C79A 0%, #DCA876 35%, #B96B3E 68%, #7A4226 100%)",
-            }}
-          >
+          <div key={runId} className="paper paper-edge absolute inset-0">
             <svg viewBox="0 0 400 300" preserveAspectRatio="none" className="h-full w-full">
+              {/* The trail as it will be, faint and dashed, then inked in. */}
               <path
-                d="M 10 250 Q 110 185, 175 155 T 390 55"
+                d="M 10 250 Q 110 185, 175 155 T 372 62"
+                fill="none"
+                stroke="#26201B"
+                strokeWidth="1.2"
+                strokeDasharray="1 7"
+                strokeLinecap="round"
+                opacity=".45"
+                vectorEffect="non-scaling-stroke"
+              />
+              <path
+                d="M 10 250 Q 110 185, 175 155 T 372 62"
                 fill="none"
                 stroke="#C0532E"
-                strokeWidth="2.4"
+                strokeWidth="2.6"
                 strokeLinecap="round"
                 pathLength={1}
                 strokeDasharray={1}
                 className="animate-path-trace"
               />
             </svg>
+            {/* X marks where the trail lands. */}
+            <div className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: "93%", top: "20.67%" }}>
+              <svg
+                aria-hidden="true"
+                width="34"
+                height="34"
+                viewBox="0 0 26 26"
+                className="animate-fade-up opacity-0 [animation-delay:.85s] [animation-duration:.25s]"
+              >
+                <path d="M5 5 L21 21 M21 5 L5 21" fill="none" stroke="#C0532E" strokeWidth="4.2" strokeLinecap="round" />
+              </svg>
+            </div>
           </div>
         )}
       </div>

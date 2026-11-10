@@ -28,6 +28,11 @@ const config: Config = {
         sans: ["var(--font-sans)", "ui-sans-serif", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
+      boxShadow: {
+        // Hard, offset shadows only: paper lying on paper, not a floating card.
+        card: "2px 3px 0 rgba(38,32,27,0.18)",
+        press: "2px 3px 0 rgba(38,32,27,0.28)",
+      },
       letterSpacing: {
         tightish: "-0.02em",
       },

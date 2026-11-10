@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/components/Logo";
+import CompassRose from "@/components/paper/CompassRose";
 
 const TABS = [
   {
@@ -68,13 +69,13 @@ export default function AppSidebarNav() {
   return (
     <nav
       aria-label="App"
-      className="sticky top-0 hidden h-screen w-[232px] shrink-0 flex-col border-r border-sandstone bg-cream px-5 py-7 md:flex"
+      className="sticky top-0 hidden h-screen w-[232px] shrink-0 flex-col border-r-[1.5px] border-dashed border-ink/35 px-5 py-7 md:flex"
     >
       <Link href="/" className="mb-10 flex items-center gap-2.5 px-1 text-ink" aria-label="Sidepath home">
         <Logo />
       </Link>
 
-      <div className="flex flex-1 flex-col gap-1">
+      <div className="flex flex-1 flex-col border-t border-dashed border-ink/25">
         {TABS.map((tab) => {
           const active = pathname === tab.href || pathname?.startsWith(tab.href + "/");
           return (
@@ -82,23 +83,24 @@ export default function AppSidebarNav() {
               key={tab.href}
               href={tab.href}
               aria-current={active ? "page" : undefined}
-              className="flex items-center gap-3.5 rounded-[10px] px-3.5 py-3 text-sm font-medium transition-colors"
-              style={{
-                color: active ? "#C0532E" : "rgba(38,32,27,.78)",
-                backgroundColor: active ? "rgba(192,83,46,0.08)" : "transparent",
-              }}
+              className="group flex min-h-[46px] items-center gap-3.5 border-b border-dashed border-ink/25 px-2 py-3 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-terracotta-dark"
+              style={{ color: active ? "#9E411F" : "rgba(38,32,27,.82)" }}
             >
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
                 {tab.icon}
               </svg>
-              {tab.label}
+              <span className="decoration-terracotta decoration-wavy underline-offset-4 group-hover:underline">
+                {tab.label}
+              </span>
+              {active && <span aria-hidden="true" className="ml-auto h-[7px] w-[7px] rounded-full bg-burgundy" />}
             </Link>
           );
         })}
       </div>
 
-      <div className="border-t border-dashed border-sandstone pt-5">
-        <p className="font-serif text-[13px] italic text-ink/50">Why not?</p>
+      <div className="flex items-end justify-between">
+        <p className="pb-1 font-serif text-sm italic text-ink/75">Why not?</p>
+        <CompassRose size={74} className="opacity-70" />
       </div>
     </nav>
   );

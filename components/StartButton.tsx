@@ -10,18 +10,9 @@ import Button from "./Button";
  * someone who's already taken it (read from the same localStorage key
  * the onboarding flow writes to).
  */
-export default function StartButton({
-  variant = "primary",
-  className = "",
-  children = "Why not? Start exploring",
-}: {
-  variant?: "primary" | "secondary" | "ghost";
-  className?: string;
-  children?: ReactNode;
-}) {
+export function useStartExploring() {
   const router = useRouter();
-
-  function go() {
+  return function go() {
     let hasProfile = false;
     try {
       hasProfile = !!localStorage.getItem("sidepath_label");
@@ -29,7 +20,19 @@ export default function StartButton({
       hasProfile = false;
     }
     router.push(hasProfile ? "/app/explore" : "/app/onboarding");
-  }
+  };
+}
+
+export default function StartButton({
+  variant = "primary",
+  className = "",
+  children = "Start exploring",
+}: {
+  variant?: "primary" | "secondary" | "ghost";
+  className?: string;
+  children?: ReactNode;
+}) {
+  const go = useStartExploring();
 
   return (
     <Button type="button" variant={variant} className={className} onClick={go}>

@@ -61,7 +61,7 @@ export default function AppBottomNav() {
   return (
     <nav
       aria-label="App"
-      className="sticky bottom-0 z-30 flex h-[66px] shrink-0 border-t border-sandstone bg-bone md:hidden"
+      className="paper sticky bottom-0 z-30 flex h-[66px] shrink-0 border-t-[1.5px] border-dashed border-ink/50 md:hidden"
     >
       {TABS.map((tab) => {
         const active = pathname === tab.href || pathname?.startsWith(tab.href + "/");
@@ -71,13 +71,15 @@ export default function AppBottomNav() {
             href={tab.href}
             aria-label={tab.label}
             aria-current={active ? "page" : undefined}
-            className="flex flex-1 flex-col items-center justify-center gap-1"
-            style={{ color: active ? "#C0532E" : "rgba(38,32,27,.72)" }}
+            className="flex flex-1 flex-col items-center justify-center gap-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-terracotta-dark"
+            style={{ color: active ? "#9E411F" : "rgba(38,32,27,.78)" }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
               {tab.icon}
             </svg>
             <span className="text-[10.5px] font-semibold">{tab.label}</span>
+            {/* A dot of sealing wax marks where you are; the empty one keeps every tab the same height. */}
+            <span aria-hidden="true" className={`h-[5px] w-[5px] rounded-full ${active ? "bg-burgundy" : ""}`} />
           </Link>
         );
       })}

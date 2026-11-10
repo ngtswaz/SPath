@@ -68,6 +68,16 @@ export function labelFromScores(scores: FacetScores): string {
   return `${top.family} Explorer, especially ${top.label}`;
 }
 
+/** Which postcard illustration a place gets until real photography exists. */
+export type SceneKind = "harbour" | "mountains" | "desert";
+
+/** The stamp colour that goes with each kind of place. */
+export const SCENE_TONE: Record<SceneKind, string> = {
+  harbour: "#C0532E", // terracotta
+  mountains: "#2E6E5B", // trail
+  desert: "#7A2E33", // burgundy
+};
+
 export interface Destination {
   id: string;
   name: string;
@@ -75,6 +85,9 @@ export interface Destination {
   price: number;
   days: number;
   gradient: [string, string];
+  scene: SceneKind;
+  /** Printed on the postcard, trail-marker style. */
+  coords: string;
   /** Position as a fraction of the map panel, 0-1 each axis. */
   pos: { x: number; y: number };
   facetScores: FacetScores;
@@ -90,6 +103,8 @@ export const DESTINATIONS: Destination[] = [
     price: 640,
     days: 5,
     gradient: g("#C0532E", "#E8A23D"),
+    scene: "harbour",
+    coords: "38.72 N, 9.14 W",
     pos: { x: 0.14, y: 0.78 },
     facetScores: { heritage: 85, local: 70, creative: 60, thrill: 20, spontaneous: 55, nature: 30, wellness: 35, slow: 60, reflective: 55 },
   },
@@ -100,6 +115,8 @@ export const DESTINATIONS: Destination[] = [
     price: 410,
     days: 7,
     gradient: g("#2E6E5B", "#7A2E33"),
+    scene: "mountains",
+    coords: "41.72 N, 44.83 E",
     pos: { x: 0.34, y: 0.32 },
     facetScores: { heritage: 75, local: 85, creative: 45, thrill: 40, spontaneous: 65, nature: 55, wellness: 30, slow: 50, reflective: 40 },
   },
@@ -110,10 +127,33 @@ export const DESTINATIONS: Destination[] = [
     price: 520,
     days: 6,
     gradient: g("#E8A23D", "#C0532E"),
+    scene: "desert",
+    coords: "17.07 N, 96.72 W",
     pos: { x: 0.74, y: 0.1 },
     facetScores: { heritage: 70, local: 90, creative: 75, thrill: 30, spontaneous: 70, nature: 40, wellness: 35, slow: 45, reflective: 35 },
   },
 ];
+
+// Demo-only mapping from destination to the one seeded trip we have. A
+// destination without an entry links to its own id, which the trip page
+// answers with an honest "no itinerary here yet".
+export const TRIP_FOR: Record<string, string> = { lisbon: "lisbon-nov" };
+
+export function tripHref(destinationId: string): string {
+  return `/app/trip/${TRIP_FOR[destinationId] ?? destinationId}`;
+}
+
+/** "Lisbon, Portugal" (as community posts store it) back to its destination. */
+export function destinationByPlace(place: string): Destination | undefined {
+  const city = place.split(",")[0].trim().toLowerCase();
+  return DESTINATIONS.find((d) => d.name.toLowerCase() === city);
+}
+
+/** "Nov 14 to 19" becomes "14 Nov" for the postmark. */
+export function postmarkDate(dateRange: string): string {
+  const m = dateRange.match(/^([A-Za-z]+)\s+(\d+)/);
+  return m ? `${m[2]} ${m[1]}` : dateRange;
+}
 
 export interface ItineraryStop {
   name: string;
@@ -224,13 +264,15 @@ export const COMMUNITY_POSTS: CommunityPost[] = [
 
 export interface PassportStamp {
   code: string;
+  /** Spoken name, since the three-letter code alone means little read aloud. */
+  name: string;
   color: string;
 }
 
 export const PROFILE_STAMPS: PassportStamp[] = [
-  { code: "FJI", color: "#9E411F" },
-  { code: "NZL", color: "#2E6E5B" },
-  { code: "IND", color: "#7A2E33" },
-  { code: "HRV", color: "#8A6220" },
-  { code: "CHN", color: "#9E411F" },
+  { code: "FJI", name: "Fiji", color: "#9E411F" },
+  { code: "NZL", name: "New Zealand", color: "#2E6E5B" },
+  { code: "IND", name: "India", color: "#7A2E33" },
+  { code: "HRV", name: "Croatia", color: "#26201B" },
+  { code: "CHN", name: "China", color: "#9E411F" },
 ];
