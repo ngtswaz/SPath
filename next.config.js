@@ -1,15 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // The marketing hub-and-spoke pages were folded into a single landing
-  // page in front of the app. Send any old links to the new home.
+  // The old site had a /planner demo page; planning now lives in the app.
   async redirects() {
-    return [
-      { source: "/mission", destination: "/", permanent: false },
-      { source: "/features", destination: "/", permanent: false },
-      { source: "/planner", destination: "/", permanent: false },
-      { source: "/join", destination: "/", permanent: false },
-    ];
+    return [{ source: "/planner", destination: "/app/plan", permanent: false }];
   },
 };
 

@@ -9,13 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Semantic names — re-theme by editing values here only.
+        // Semantic names. Re-theme by editing values here only.
         ink: "#26201B",
         bone: "#FAF8F4",
         cream: "#F7F2EA",
         terracotta: {
           DEFAULT: "#C0532E",
           dark: "#9E411F",
+          deep: "#7C3016",
         },
         sandstone: "#E0C9A6",
         amber: "#E8A23D",
@@ -29,36 +30,26 @@ const config: Config = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        // Hard, offset shadows only: paper lying on paper, not a floating card.
-        card: "2px 3px 0 rgba(38,32,27,0.18)",
-        press: "2px 3px 0 rgba(38,32,27,0.28)",
+        // Reserved for things that really float: the hero search bar, sticky bars, menus.
+        float: "0 1px 2px rgba(38,32,27,0.06), 0 12px 32px -12px rgba(38,32,27,0.22)",
       },
       letterSpacing: {
         tightish: "-0.02em",
       },
       keyframes: {
-        "path-draw": {
-          "0%": { strokeDashoffset: "1000" },
-          "100%": { strokeDashoffset: "0" },
-        },
-        // Geometry-independent trace: paired with the SVG `pathLength={1}`
-        // attribute so a dash of exactly 1 unit always covers the whole
-        // line, whatever its actual rendered length is. Avoids guessing a
-        // dasharray number per path (the bug that left path-draw partially
-        // invisible when reused on a differently-sized path).
-        "path-trace": {
-          "0%": { strokeDashoffset: "1" },
-          "100%": { strokeDashoffset: "0" },
-        },
         "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(12px)" },
+          "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "route-bar": {
+          "0%": { transform: "scaleX(0)", opacity: "1" },
+          "70%": { transform: "scaleX(1)", opacity: "1" },
+          "100%": { transform: "scaleX(1)", opacity: "0" },
         },
       },
       animation: {
-        "path-draw": "path-draw 1.1s ease-out forwards",
-        "path-trace": "path-trace 1.1s ease-out forwards",
-        "fade-up": "fade-up 0.6s ease-out forwards",
+        "fade-up": "fade-up 0.35s ease-out both",
+        "route-bar": "route-bar 0.6s ease-out forwards",
       },
     },
   },

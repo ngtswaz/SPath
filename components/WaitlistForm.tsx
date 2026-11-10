@@ -56,7 +56,7 @@ export default function WaitlistForm() {
 
   if (status === "done") {
     return (
-      <p className="rounded-[3px] border-[1.5px] border-trail bg-bone/70 px-6 py-5 text-trail">
+      <p className="rounded-xl border border-trail/40 bg-trail/10 px-5 py-4 font-medium text-trail">
         {message}
       </p>
     );
@@ -74,7 +74,7 @@ export default function WaitlistForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="you@wherever-you-are.com"
-        className="min-h-[44px] flex-1 rounded-[3px] border-[1.5px] border-ink bg-bone/80 px-4 py-3 text-sm text-ink outline-none placeholder:text-ink/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-dark"
+        className="field flex-1"
       />
       <Button type="submit" disabled={status === "loading"}>
         {status === "loading" ? "Joining…" : "Get early access"}

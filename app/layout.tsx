@@ -3,8 +3,7 @@ import { Fraunces, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Cursor from "@/components/Cursor";
-import PathTransition from "@/components/PathTransition";
+import RouteProgress from "@/components/RouteProgress";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/constants";
 
 const fraunces = Fraunces({
@@ -60,9 +59,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable} ${spaceMono.variable}`}>
       <body>
-        <Cursor />
+        <RouteProgress />
         <Navbar />
-        <PathTransition>{children}</PathTransition>
+        {children}
         <Footer />
       </body>
     </html>

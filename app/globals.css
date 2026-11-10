@@ -23,7 +23,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: var(--cream);
+  background: var(--bone);
   color: var(--ink);
 }
 
@@ -42,41 +42,20 @@ a {
   color: var(--bone);
 }
 
-/* Aged chart paper: a fine grain tile over a large, soft tea-stain tile.
-   Both are tiny static SVGs in /public, so the texture costs two cached
-   images instead of a live filter on every screen. */
-.paper {
-  background-color: var(--cream);
-  background-image: url("/paper-grain.svg"), url("/paper-stain.svg");
-  background-size: 240px 240px, 900px 900px;
+/* One focus style for every control, so keyboard users always get the same cue. */
+:focus-visible {
+  outline: 2px solid var(--terracotta-dark);
+  outline-offset: 2px;
 }
 
-/* Sandstone creeping in from the edges, like a sheet that has been handled. */
-.paper-edge {
-  box-shadow: inset 0 0 70px rgba(224, 201, 166, 0.95),
-    inset 0 0 18px rgba(59, 42, 33, 0.14);
-}
-
-/* Dotted leader between a name and its figure, as in a ship's manifest. */
-.leader {
-  flex: 1 1 0%;
-  min-width: 12px;
-  border-bottom: 1.5px dotted rgba(38, 32, 27, 0.5);
-  transform: translateY(-4px);
-}
-
-/* The brand's winding-path motif, reused as an SVG stroke utility. */
-.path-line {
-  fill: none;
-  stroke: var(--terracotta);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-}
-
-.path-line.drawn {
-  animation: path-draw 1.1s ease-out forwards;
+@layer components {
+  /* Text inputs, selects and textareas share one look. */
+  .field {
+    @apply min-h-[46px] w-full rounded-xl border border-ink/20 bg-white px-3.5 text-[15px] text-ink placeholder:text-ink/45;
+  }
+  .field:focus-visible {
+    @apply border-terracotta-dark outline-offset-0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,8 +1,13 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/constants";
 
+const PAGES = ["", "/how-it-works", "/features", "/pricing", "/mission", "/join"];
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    { url: SITE_URL, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
-  ];
+  return PAGES.map((path) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: path === "" ? 1 : 0.7,
+  }));
 }

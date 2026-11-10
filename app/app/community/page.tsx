@@ -1,81 +1,87 @@
 "use client";
 
-import { COMMUNITY_POSTS, SCENE_TONE, destinationByPlace } from "@/lib/app-data";
-import PostcardScene from "@/components/paper/PostcardScene";
-import { Postmark, Stamp } from "@/components/paper/Stamp";
-import { sceneLabel } from "@/components/app/Postcard";
+import Link from "next/link";
+import { COMMUNITY_POSTS, FAMILY_COLOR, FAMILY_ROOMS, destinationByPlace } from "@/lib/app-data";
+import { useLocal } from "@/lib/store";
+import Photo from "@/components/ui/Photo";
+import Icon from "@/components/ui/icons";
+import { Notice, PageHeader, Section } from "@/components/ui";
 
 export default function CommunityPage() {
+  const [liked, setLiked] = useLocal<string[]>("sidepath_liked_posts", []);
+
   return (
-    <div className="flex flex-col px-6 pb-10 pt-[26px] md:px-10 md:pt-10">
-      <h1 className="font-serif text-3xl font-semibold tracking-tightish text-ink md:text-4xl">Community</h1>
-      <p className="mt-1 text-[13.5px] text-ink/80">
-        Real trips from people who&rsquo;ve actually been there.
-      </p>
+    <div>
+      <PageHeader title="Community" sub="Real trips from people who've actually been there." />
 
-      <div className="mt-[22px] flex flex-col gap-[22px]">
-        {COMMUNITY_POSTS.map((post, i) => {
-          const d = destinationByPlace(post.destination);
-          const city = post.destination.split(",")[0];
-          return (
-            // Each post is a postcard someone sent back: the picture, then
-            // the back of the card with their note on the left and the
-            // stamp (what it cost) and postmark (where, how long) on the right.
-            <article
-              key={post.id}
-              className={`relative border border-ink/20 bg-bone p-2 shadow-card md:flex ${
-                i % 2 === 0 ? "-rotate-[1.2deg]" : "rotate-[1.3deg]"
-              }`}
-            >
-              {/* Phone: picture on top. Desktop: the card laid open, picture beside the note. */}
-              {d && (
-                <div className="md:w-[40%] md:shrink-0">
-                  <PostcardScene scene={d.scene} label={sceneLabel(d)} className="h-[110px] md:h-full md:min-h-[190px]" />
-                </div>
-              )}
-              <div className="flex min-w-0 flex-1 gap-3.5 px-1.5 pb-1.5 pt-3 md:pl-4 md:pt-2">
-                <div className="min-w-0 flex-1">
-                  <p className="font-serif text-[14.5px] italic leading-[1.45] text-ink md:text-base">{post.caption}</p>
-                  <p className="mt-2.5 font-serif text-[19px] font-semibold italic leading-tight text-ink">
-                    {post.authorName}
-                  </p>
-                  <p className="mt-px font-mono text-[9.5px] leading-snug text-ink/80">{post.authorLabel}</p>
-                  <p className="mt-1.5 font-mono text-[10.5px] text-ink/85">
-                    {post.destination}, ${post.price}, {post.days} days
-                  </p>
-                </div>
-                <div className="relative flex w-24 shrink-0 flex-col items-end justify-between border-l border-ink/35 pl-3.5">
-                  <Stamp
-                    value={`$${post.price}`}
-                    tone={d ? SCENE_TONE[d.scene] : "#C0532E"}
-                    className={i % 2 === 0 ? "rotate-[4deg]" : "-rotate-[5deg]"}
-                  />
-                  <Postmark
-                    city={city}
-                    lines={[`${post.days} days`]}
-                    className={`absolute -left-3 top-[52px] ${i % 2 === 0 ? "-rotate-12" : "rotate-[9deg]"}`}
-                  />
-                  <button
-                    type="button"
-                    aria-label={`Like ${post.authorName}'s postcard, ${post.likes} likes`}
-                    className="-mb-2 -mr-1 mt-3 flex min-h-[44px] min-w-[44px] items-center justify-end gap-1.5 px-1 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-terracotta-dark"
-                  >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9E411F" strokeWidth="2.2" aria-hidden="true">
-                      <path d="M20.8 8.6c0-3-2.4-5.4-5.4-5.4-1.7 0-3.2.8-4.2 2-1-1.2-2.5-2-4.2-2-3 0-5.4 2.4-5.4 5.4 0 6 9.6 11 9.6 11s9.6-5 9.6-11z" />
-                    </svg>
-                    <span className="font-mono text-[11.5px]">{post.likes}</span>
-                  </button>
-                </div>
-              </div>
-            </article>
-          );
-        })}
+      <Section title="Rooms">
+        <ul className="grid gap-3 md:grid-cols-3">
+          {FAMILY_ROOMS.map((room) => (
+            <li key={room.slug}>
+              <Link
+                href={`/app/community/${room.slug}`}
+                className="group flex h-full flex-col rounded-2xl border border-ink/10 bg-white p-5 hover:border-ink/30"
+              >
+                <span className="h-1.5 w-10 rounded-full" style={{ background: FAMILY_COLOR[room.family] }} />
+                <span className="mt-3 font-serif text-xl font-semibold tracking-tightish text-ink group-hover:underline">{room.family}</span>
+                <span className="mt-1 flex-1 text-sm leading-snug text-ink/75">{room.blurb}</span>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-terracotta-dark">
+                  Open the room
+                  <Icon name="arrow" size={16} />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </Section>
 
-        <p className="mt-2 text-center font-serif text-[15px] italic text-ink/80">
-          Posting your own trip isn&rsquo;t built yet. This is a preview of what the
-          feed will look like once it is.
-        </p>
-      </div>
+      <Section title="Notes from the road" className="mt-10">
+        <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {COMMUNITY_POSTS.map((post) => {
+            const d = destinationByPlace(post.destination);
+            const isLiked = liked.includes(post.id);
+            return (
+              <li key={post.id}>
+                <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white">
+                  {d && <Photo name={d.photo} width={520} className="aspect-[16/10]" />}
+                  <div className="flex flex-1 flex-col p-5">
+                    <p className="text-xs font-semibold text-ink/65">{post.destination}</p>
+                    <p className="mt-2 flex-1 text-[15px] leading-relaxed text-ink">&ldquo;{post.caption}&rdquo;</p>
+                    <div className="mt-4 flex items-center gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink font-serif text-base font-semibold text-bone">
+                        {post.authorInitial}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-semibold text-ink">{post.authorName}</span>
+                        <span className="block truncate text-[13px] text-ink/65">{post.authorLabel}</span>
+                      </span>
+                    </div>
+                    <div className="mt-4 flex items-center justify-between border-t border-ink/10 pt-3">
+                      <span className="font-mono text-xs font-bold text-ink/75">
+                        ${post.price}, {post.days} days
+                      </span>
+                      <button
+                        type="button"
+                        aria-label={`${isLiked ? "Unlike" : "Like"} ${post.authorName}'s note`}
+                        aria-pressed={isLiked}
+                        onClick={() => setLiked((l) => (isLiked ? l.filter((x) => x !== post.id) : [...l, post.id]))}
+                        className="-mr-2 flex min-h-[44px] items-center gap-1.5 rounded-full px-2.5 text-sm font-semibold text-ink hover:bg-ink/[0.05]"
+                      >
+                        <Icon name="saved" size={17} filled={isLiked} className={isLiked ? "text-terracotta" : "text-ink/70"} />
+                        <span className="font-mono text-xs">{post.likes + (isLiked ? 1 : 0)}</span>
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              </li>
+            );
+          })}
+        </ul>
+        <Notice className="mt-6">
+          Posting your own trip isn&rsquo;t built yet. This is a preview of what the feed will
+          look like once it is.
+        </Notice>
+      </Section>
     </div>
   );
 }
