@@ -159,7 +159,7 @@ export default function SeaChart({ destinations }: { destinations: Destination[]
               className={
                 i === last
                   ? "absolute bottom-[calc(50%+9.6cqw)] left-1/2 -translate-x-1/2 whitespace-nowrap text-center"
-                  : "absolute left-[calc(50%+9.8cqw)] top-1/2 -translate-y-1/2 whitespace-nowrap"
+                  : "absolute left-[calc(50%+7.6cqw)] top-[calc(50%+1.4cqw)] whitespace-nowrap"
               }
             >
               <span className="block font-serif text-[15.5px] italic leading-tight text-ink decoration-terracotta decoration-wavy underline-offset-4 group-hover:underline">

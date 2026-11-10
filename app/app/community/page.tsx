@@ -53,7 +53,7 @@ export default function CommunityPage() {
                   <Postmark
                     city={city}
                     lines={[`${post.days} days`]}
-                    className={`absolute -left-5 top-[50px] ${i % 2 === 0 ? "-rotate-12" : "rotate-[9deg]"}`}
+                    className={`absolute -left-3 top-[52px] ${i % 2 === 0 ? "-rotate-12" : "rotate-[9deg]"}`}
                   />
                   <button
                     type="button"
